@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>learn Resources</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+
+<div style="text-align: center; margin:0 auto; width: 1000px; ">
+    <h1>学习资源大奉送（Java）</h1>
+    <table width="100%" border="1" cellspacing="1" cellpadding="1">
+        <tr>
+            <td>编号</td>
+            <td>接口名称</td>
+            <td>响应报文</td>
+            <td>结果</td>
+        </tr>
+        <!--/*@thymesVar id="learnList" type=""*/-->
+        <!--/*@thymesVar id="scanResults" type=""*/-->
+        <tr th:each="learn : ${learnList}">
+            <td th:text="${learn.id}"></td>
+            <td th:text="${learn.url}"></td>
+            <td th:text="${learn.body}"></td>
+            <td th:text="${learn.result}"></td>
+        </tr>
+
+        <tr>
+            <td>总数</td>
+            <td>成功</td>
+            <td>失败</td>
+        </tr>
+        <tr th:each="scan : ${scanResults}">
+            <td th:text="${scan.total}"></td>
+            <td th:text="${scan.scan}"></td>
+            <td th:text="${scan.unScan}"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

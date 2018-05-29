@@ -1,0 +1,13 @@
+spring:
+  profiles:
+    active: dev
+#  datasource:
+#    driver-class-name: org.sqlite.JDBC
+#    url: jdbc:sqlite:res/db/transfer.db
+#    username:
+#    password:
+#  jpa:
+#    database-platform: com.jxinternet.platform.service.base.SQLiteDialect
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
