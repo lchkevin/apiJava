@@ -17,11 +17,11 @@
         </tr>
         <!--/*@thymesVar id="learnList" type=""*/-->
         <!--/*@thymesVar id="scanResults" type=""*/-->
-        <tr th:each="learn : ${learnList}">
-            <td th:text="${learn.id}"></td>
-            <td th:text="${learn.url}"></td>
-            <td th:text="${learn.body}"></td>
-            <td th:text="${learn.result}"></td>
+        <tr th:each="apiResult : ${apiResults}">
+            <td th:text="${apiResult.id}"></td>
+            <td th:text="${apiResult.url}"></td>
+            <td th:text="${apiResult.body}"></td>
+            <td th:text="${apiResult.result}"></td>
         </tr>
 
         <tr>
@@ -29,10 +29,10 @@
             <td>成功</td>
             <td>失败</td>
         </tr>
-        <tr th:each="scan : ${scanResults}">
-            <td th:text="${scan.total}"></td>
-            <td th:text="${scan.success}"></td>
-            <td th:text="${scan.failed}"></td>
+        <tr th:each="testResultSummary : ${testResultSummaries}">
+            <td th:text="${testResultSummary.total}"></td>
+            <td th:text="${testResultSummary.success}"></td>
+            <td th:text="${testResultSummary.failed}"></td>
         </tr>
     </table>
 </div>

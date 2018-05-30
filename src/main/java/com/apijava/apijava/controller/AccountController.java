@@ -1,7 +1,7 @@
 package com.apijava.apijava.controller;
 
-import com.apijava.apijava.domain.LearnResouce;
-import com.apijava.apijava.domain.ScanResult;
+import com.apijava.apijava.domain.APIResult;
+import com.apijava.apijava.domain.TestResultSummary;
 import com.apijava.apijava.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -36,8 +36,8 @@ public class AccountController {
         resultList.add(result);
         result = Arrays.asList(accountService.getBookmarks().split(",,,"));
         resultList.add(result);
-        List<LearnResouce> learnList = new ArrayList<>();
-        List<ScanResult> scanResults = new ArrayList<>();
+        List<APIResult> apiResults = new ArrayList<>();
+        List<TestResultSummary> testResultSummaries = new ArrayList<>();
 
         resultList.forEach(list -> {
             if (list.get(0).startsWith("2")) {
@@ -47,15 +47,15 @@ public class AccountController {
                 failed.addAndGet(1);
                 total.addAndGet(1);
             }
-            LearnResouce learnResouce = new LearnResouce(String.valueOf(total.get()),list.get(2), list.get(1), list.get(0));
-            learnList.add(learnResouce);
+            APIResult APIResult = new APIResult(String.valueOf(total.get()),list.get(2), list.get(1), list.get(0));
+            apiResults.add(APIResult);
         });
 
-        ScanResult scanResult = new ScanResult(total, success, failed);
-        scanResults.add(scanResult);
+        TestResultSummary testResultSummary = new TestResultSummary(total, success, failed);
+        testResultSummaries.add(testResultSummary);
         ModelAndView modelAndView = new ModelAndView("/template");
-        modelAndView.addObject("learnList", learnList);
-        modelAndView.addObject("scanResults", scanResults);
+        modelAndView.addObject("apiResults", apiResults);
+        modelAndView.addObject("testResultSummaries", testResultSummaries);
         return modelAndView;
     }
 
