@@ -30,17 +30,27 @@ public class AccountController {
         AtomicInteger failed = new AtomicInteger();
         AtomicInteger total = new AtomicInteger();
         List<List<String>> resultList = new ArrayList<>();
-        List<String> result = Arrays.asList(accountService.getBookmarks().split(",,,"));
-        resultList.add(result);
-        result = Arrays.asList(accountService.entitlementOne().split(",,,"));
-        resultList.add(result);
-        result = Arrays.asList(accountService.addUser().split(",,,"));
+        List<String> result;
+        result = Arrays.asList(accountService.addBookmarks().split(",,,"));
         resultList.add(result);
         result = Arrays.asList(accountService.getBookmarks().split(",,,"));
         resultList.add(result);
-        result = Arrays.asList(accountService.getBookmarks().split(",,,"));
+        result = Arrays.asList(accountService.delBookmarks().split(",,,"));
         resultList.add(result);
-        result = Arrays.asList(accountService.getBookmarks().split(",,,"));
+        result = Arrays.asList(accountService.addAgentUser().split(",,,"));
+        resultList.add(result);
+        result = Arrays.asList(accountService.updateUserInfo().split(",,,"));
+        resultList.add(result);
+        result = Arrays.asList(accountService.encryptSecurityPassword().split(",,,"));
+        resultList.add(result);
+
+
+        /**
+         * 修改登录密码之后，需要重新登录才能够进行其他的操作，所以这个接口放在最后执行
+         * */
+        result = Arrays.asList(accountService.encryptLoginPassword().split(",,,"));
+        resultList.add(result);
+        result = Arrays.asList(accountService.signIn().split(",,,"));
         resultList.add(result);
         List<APIResult> apiResults = new ArrayList<>();
         List<TestResultSummary> testResultSummaries = new ArrayList<>();
@@ -48,12 +58,11 @@ public class AccountController {
         resultList.forEach(list -> {
             if (list.get(0).startsWith("2")) {
                 success.addAndGet(1);
-                total.addAndGet(1);
             } else {
                 failed.addAndGet(1);
-                total.addAndGet(1);
             }
-            APIResult APIResult = new APIResult(String.valueOf(total.get()),list.get(2), list.get(1), list.get(0));
+            total.addAndGet(1);
+            APIResult APIResult = new APIResult(String.valueOf(total.get()), list.get(2), list.get(1), list.get(0));
             apiResults.add(APIResult);
         });
 
