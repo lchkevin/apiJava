@@ -30,9 +30,11 @@ public class AccountController {
         AtomicInteger failed = new AtomicInteger();
         AtomicInteger total = new AtomicInteger();
         List<List<String>> resultList = new ArrayList<>();
-        List<String> result = Arrays.asList(accountService.entitlementAll().split(",,,"));
+        List<String> result = Arrays.asList(accountService.getBookmarks().split(",,,"));
         resultList.add(result);
         result = Arrays.asList(accountService.entitlementOne().split(",,,"));
+        resultList.add(result);
+        result = Arrays.asList(accountService.getBookmarks().split(",,,"));
         resultList.add(result);
         List<LearnResouce> learnList = new ArrayList<>();
         List<ScanResult> scanResults = new ArrayList<>();

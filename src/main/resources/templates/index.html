@@ -31,8 +31,8 @@
         </tr>
         <tr th:each="scan : ${scanResults}">
             <td th:text="${scan.total}"></td>
-            <td th:text="${scan.scan}"></td>
-            <td th:text="${scan.unScan}"></td>
+            <td th:text="${scan.success}"></td>
+            <td th:text="${scan.failed}"></td>
         </tr>
     </table>
 </div>
