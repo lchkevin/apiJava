@@ -34,6 +34,12 @@ public class AccountController {
         resultList.add(result);
         result = Arrays.asList(accountService.entitlementOne().split(",,,"));
         resultList.add(result);
+        result = Arrays.asList(accountService.addUser().split(",,,"));
+        resultList.add(result);
+        result = Arrays.asList(accountService.getBookmarks().split(",,,"));
+        resultList.add(result);
+        result = Arrays.asList(accountService.getBookmarks().split(",,,"));
+        resultList.add(result);
         result = Arrays.asList(accountService.getBookmarks().split(",,,"));
         resultList.add(result);
         List<APIResult> apiResults = new ArrayList<>();

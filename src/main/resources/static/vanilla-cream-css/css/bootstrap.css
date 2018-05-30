@@ -5024,9 +5024,19 @@ a.thumbnail:focus {
   color: inherit;
 }
 
+.alert-failed {
+    color: black;
+    background-color: red !important;
+    border-color: #d6e9c6;
+}
+
+.alert-failed hr {
+    border-top-color: red;
+}
+
 .alert-success {
   color: #468847;
-  background-color: #dff0d8;
+  background-color: chartreuse !important;
   border-color: #d6e9c6;
 }
 
