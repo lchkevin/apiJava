@@ -2,6 +2,11 @@ package com.apijava.apijava.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.apijava.apijava.Utils.Tools;
+import com.apijava.apijava.dao.ApiInfoDao;
+import com.apijava.apijava.dao.ApiTestResultDao;
+import com.apijava.apijava.domain.ApiInfo;
+import com.apijava.apijava.domain.ApiTestResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -12,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.Date;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -19,6 +26,9 @@ import java.util.Random;
 @Slf4j
 @Service
 public class AccountService {
+    private final ApiInfoDao apiInfoDao;
+    private final ApiTestResultDao apiTestResultDao;
+    private final Tools tools;
 
     private RestTemplate template;
     private UserLogin userLogin;
@@ -27,7 +37,10 @@ public class AccountService {
     private JSONObject setBody = new JSONObject();
     private ResponseEntity<String> response;
 
-    private AccountService(Environment evm, UserLogin userLogin) {
+    private AccountService(ApiInfoDao apiInfoDao, ApiTestResultDao apiTestResultDao, Tools exchangeTools, Environment evm, UserLogin userLogin) {
+        this.apiInfoDao = apiInfoDao;
+        this.apiTestResultDao = apiTestResultDao;
+        this.tools = exchangeTools;
         template = new RestTemplate();
         this.userLogin = userLogin;
         this.evm = evm;
@@ -49,6 +62,7 @@ public class AccountService {
      * user.1.彩种收藏保存接口
      * */
     public String addBookmarks() {
+        ApiInfo apiInfo = new ApiInfo();
         String url = evm.getProperty("account_url");
         url = url + "/webapi/account/profile/addBookmarks?access_token=" + getToken();
         requestHeaders.clear();
@@ -57,13 +71,22 @@ public class AccountService {
         setBody.clear();
         setBody.put("gameId", getGameID());
         log.info(url);
-        return getPostResponse(url);
+        apiInfo.setUrl(url);
+        apiInfo.setSetBody(setBody.toString());
+        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHttpMethod("POST");
+        apiInfo.setSystemName("account-user");
+        apiInfo.setExpectResult("Success");
+        apiInfo.setCreatTime(String.valueOf(Date.from(Instant.ofEpochSecond(System.currentTimeMillis()))));
+        apiInfoDao.save(apiInfo);
+        return getPostResponse(apiInfo);
     }
 
     /**
      * user.2.用户彩种收藏删除接口
      * */
     public String delBookmarks() {
+        ApiInfo apiInfo = new ApiInfo();
         String url = evm.getProperty("account_url");
         url = url + "/webapi/account/profile/delBookmarks?access_token=" + getToken();
         requestHeaders.clear();
@@ -72,25 +95,42 @@ public class AccountService {
         setBody.clear();
         setBody.put("gameId", getGameID());
         log.info(url);
-        return getDeleteResponse(HttpMethod.DELETE, url);
+        apiInfo.setUrl(url);
+        apiInfo.setSetBody(setBody.toString());
+        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHttpMethod("DELETE");
+        apiInfo.setSystemName("account-user");
+        apiInfo.setExpectResult("Success");
+        apiInfo.setCreatTime(String.valueOf(Date.from(Instant.ofEpochSecond(System.currentTimeMillis()))));
+        apiInfoDao.save(apiInfo);
+        return getResponse(HttpMethod.DELETE, apiInfo);
     }
 
     /**
      * user.3.用户彩种收藏获取接口
      * */
     public String getBookmarks() {
+        ApiInfo apiInfo = new ApiInfo();
         String url = evm.getProperty("account_url");
         url = url + "/webapi/account/profile/getBookmarks?access_token=" + getToken();
         requestHeaders.clear();
         requestHeaders.add("Accept", "application/json");
         log.info(url);
-        return getGetResponse(url);
+        apiInfo.setUrl(url);
+        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHttpMethod("GET");
+        apiInfo.setSystemName("account-user");
+        apiInfo.setExpectResult("Success");
+        apiInfo.setCreatTime(String.valueOf(Date.from(Instant.ofEpochSecond(System.currentTimeMillis()))));
+        apiInfoDao.save(apiInfo);
+        return getGetResponse(apiInfo);
     }
 
     /**
      * user.4.代理创建下层用户
      * */
     public String addAgentUser() {
+        ApiInfo apiInfo = new ApiInfo();
         String url = evm.getProperty("account_url");
         url = url + "/webapi/account/users?access_token=" + getToken();
         requestHeaders.clear();
@@ -106,13 +146,23 @@ public class AccountService {
         setBody.put("qq", "258845215");
         setBody.put("email", "258845215@qq.com");
         log.info(url);
-        return getPostResponse(url);
+
+        apiInfo.setUrl(url);
+        apiInfo.setSetBody(setBody.toString());
+        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHttpMethod("POST");
+        apiInfo.setSystemName("account-user");
+        apiInfo.setExpectResult("Success");
+        apiInfo.setCreatTime(String.valueOf(Date.from(Instant.ofEpochSecond(System.currentTimeMillis()))));
+        apiInfoDao.save(apiInfo);
+        return getPostResponse(apiInfo);
     }
 
     /**
      * user.5.用户更新基本信息
      * */
     public String updateUserInfo() {
+        ApiInfo apiInfo = new ApiInfo();
         String url = evm.getProperty("account_url");
         url = url + "/webapi/account/users/?access_token=" + getToken();
         requestHeaders.clear();
@@ -127,13 +177,22 @@ public class AccountService {
         setBody.put("prizeGroup", 1978);
         setBody.put("qq", "321232132");
         setBody.put("username", getUserName());
-        return getDeleteResponse(HttpMethod.PUT, url);
+        apiInfo.setUrl(url);
+        apiInfo.setSetBody(setBody.toString());
+        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHttpMethod("PUT");
+        apiInfo.setSystemName("account-user");
+        apiInfo.setExpectResult("Success");
+        apiInfo.setCreatTime(String.valueOf(Date.from(Instant.ofEpochSecond(System.currentTimeMillis()))));
+        apiInfoDao.save(apiInfo);
+        return getResponse(HttpMethod.PUT, apiInfo);
     }
 
     /**
      * user.6.修改用户取款密码
      * */
     public String encryptSecurityPassword() {
+        ApiInfo apiInfo = new ApiInfo();
         String url = evm.getProperty("account_url");
         url = url + "/webapi/account/users/change/encryptPassword?access_token=" + getToken();
         requestHeaders.clear();
@@ -146,7 +205,16 @@ public class AccountService {
         String password = "NTIwMmY1MDIyZjcwNGU3MmM2NmU4MGY4NjM0MGFlYzdlZTVkZGNmM2Q0NDcwYWYyMDM3MThjMzVkN2U1NDQ5YjhmYTcxNzc2ODAyYmRkMmQ3MDU1YjQwNGQ2Y2RkMTIwZTNiYTk4ZDdjMjdiNWE3YzlhOWJlMjEzNWYxNjk1YmExOTVkMjY5NmNmOGRjN2M3ZjVhZTkxNjc3NmVmMTczOThmMDJhMDc4YjQ2N2Y4ZTBlMzkyNTI1OTAwNzA2NmEyYTU2NGViNzliNzZiZjg2YTFkNmYzOTc4ZGYxMjUwYTJlYmRkZjQzODRhNTliNmZiNThlNjYzMmIwMDAxMGQwYQ==";
         setBody.put("password", password);
         log.info(url);
-        return getPostResponse(url);
+
+        apiInfo.setUrl(url);
+        apiInfo.setSetBody(setBody.toString());
+        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHttpMethod("POST");
+        apiInfo.setSystemName("account-user");
+        apiInfo.setExpectResult("Success");
+        apiInfo.setCreatTime(String.valueOf(Date.from(Instant.ofEpochSecond(System.currentTimeMillis()))));
+        apiInfoDao.save(apiInfo);
+        return getPostResponse(apiInfo);
     }
 
     /**
@@ -165,7 +233,16 @@ public class AccountService {
         String password = "MTQ5MjMzOTg0Njc4Mzg5YjM1Mzg5NzQxYmZhOWY1MGIzNGRlMTcxOTY5NTA0Mzc3NWYyMGNlNjNjZjNmN2I1NjMyOWMxMzA1MzJmYzhkN2QwNTQ5YTMyYzQ1NjBlODZkYWRlY2Y2M2QzZDhjMDUxYjA4YzhkODkzYjY3YzI0ODk4ZjU3ZTM2NmZiODZkYmQwMmYwMTNmOGE4MWJlZGVhZjNmZjNmNWJkMzg1ZGM0ZWRlZjJiZjAxZGRlODIzNTkyNjg4OGMxZDM5OTNmMDM2Y2ZkNDg2YmQzNjY2MGRjZDZjNDBhMWI1M2VlOTMxZDBlYmY4YjE3NDU1ZDk3ZGJiMg==";
         setBody.put("password", password);
         log.info(url);
-        return getPostResponse(url);
+        ApiInfo apiInfo = new ApiInfo();
+        apiInfo.setUrl(url);
+        apiInfo.setSetBody(setBody.toString());
+        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHttpMethod("POST");
+        apiInfo.setSystemName("account-user");
+        apiInfo.setExpectResult("Success");
+        apiInfo.setCreatTime(String.valueOf(Date.from(Instant.ofEpochSecond(System.currentTimeMillis()))));
+        apiInfoDao.save(apiInfo);
+        return getPostResponse(apiInfo);
     }
 
     /**
@@ -179,53 +256,85 @@ public class AccountService {
         requestHeaders.add("Accept", "application/json");
         setBody.clear();
         log.info(url);
-        return getPostResponse(url);
+        ApiInfo apiInfo = new ApiInfo();
+        apiInfo.setUrl(url);
+        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHttpMethod("POST");
+        apiInfo.setSystemName("account-user");
+        apiInfo.setExpectResult("Failed");
+        apiInfo.setCreatTime(String.valueOf(Date.from(Instant.ofEpochSecond(System.currentTimeMillis()))));
+        apiInfoDao.save(apiInfo);
+        return getPostResponse(apiInfo);
     }
 
 
     /**
      * http-Post请求结果处理
      * */
-    private String getPostResponse(String url) {
+    private String getPostResponse(ApiInfo apiInfo) {
+        ApiTestResult apiTestResult;
+        apiTestResult = tools.toApiTestResult(apiInfo);
         try {
-            response = template.postForEntity(url, setBody, String.class);
+            response = template.postForEntity(apiInfo.getUrl(), setBody, String.class);
         }catch (HttpClientErrorException e) {
-            String status = e.getMessage().trim().substring(0, 3);
-            String body = e.getResponseBodyAsString();
-            return status+ ",,," + body + ",,," + url;
+            return getExceptionResponse(apiInfo, apiTestResult, e);
         }
-        return response.getStatusCodeValue() + ",,," + response.getBody() + ",,," + url;
+        tools.responseBodyToApiTestResult(apiTestResult, response);
+        apiTestResult.setCreateTime(tools.getTimeName());
+        //TODO 添加到结果数据库中
+        apiTestResultDao.save(apiTestResult);
+        return response.getStatusCodeValue() + ",,," + response.getBody() + ",,," + apiInfo.getUrl();
     }
 
     /**
      * http-Get请求结果处理
      * */
-    private String getGetResponse(String url) {
+    private String getGetResponse(ApiInfo apiInfo) {
+        ApiTestResult apiTestResult;
+        apiTestResult = tools.toApiTestResult(apiInfo);
         try {
-            response = template.getForEntity(url, String.class);
+            response = template.getForEntity(apiInfo.getUrl(), String.class);
         }catch (HttpClientErrorException e) {
-            String status = e.getMessage().trim().substring(0, 3);
-            String body = e.getResponseBodyAsString();
-            return status+ ",,," + body + ",,," + url;
+            return getExceptionResponse(apiInfo, apiTestResult, e);
         }
-        return response.getStatusCodeValue() + ",,," + response.getBody() + ",,," + url;
+        tools.responseBodyToApiTestResult(apiTestResult, response);
+        apiTestResult.setCreateTime(tools.getTimeName());
+        apiTestResultDao.save(apiTestResult);
+        return response.getStatusCodeValue() + ",,," + response.getBody() + ",,," + apiInfo.getUrl();
+    }
+
+    private String getExceptionResponse(ApiInfo apiInfo, ApiTestResult apiTestResult, HttpClientErrorException e) {
+        String status = e.getMessage().trim().substring(0, 3);
+        String body = e.getResponseBodyAsString();
+        apiTestResult.setStatus_code(Integer.parseInt(status));
+        apiTestResult.setResponseBody(body);
+        if (apiInfo.getExpectResult().equals("Failed")) {
+            apiTestResult.setVerification("Success");
+        } else apiTestResult.setVerification("Failed");
+        apiTestResult.setCreateTime(tools.getTimeName());
+        apiTestResultDao.save(apiTestResult);
+        return status+ ",,," + body + ",,," + apiInfo.getUrl();
     }
 
     /**
      * http-Delete请求结果处理
+     * http-put请求结果处理
      * */
-    private String getDeleteResponse(HttpMethod httpMethod, String url) {
+    private String getResponse(HttpMethod httpMethod, ApiInfo apiInfo) {
+        ApiTestResult apiTestResult;
+        apiTestResult = tools.toApiTestResult(apiInfo);
         HttpEntity<String> requestEntity = new HttpEntity<>(setBody.toString(), requestHeaders);
-        log.info(url);
+        log.info(apiInfo.getUrl());
         ResponseEntity<String> response;
         try {
-            response = template.exchange(url, httpMethod, requestEntity, String.class);
+            response = template.exchange(apiInfo.getUrl(), httpMethod, requestEntity, String.class);
         }catch (HttpClientErrorException e) {
-            String status = e.getMessage().trim().substring(0, 3);
-            String body = e.getResponseBodyAsString();
-            return status+ ",,," + body + ",,," + url;
+            return getExceptionResponse(apiInfo, apiTestResult, e);
         }
-        return response.getStatusCodeValue() + ",,," + response.getBody() + ",,," + url;
+        tools.responseBodyToApiTestResult(apiTestResult, response);
+        apiTestResult.setCreateTime(tools.getTimeName());
+        apiTestResultDao.save(apiTestResult);
+        return response.getStatusCodeValue() + ",,," + response.getBody() + ",,," + apiInfo.getUrl();
     }
 
     /**
@@ -266,7 +375,7 @@ public class AccountService {
         return gameIDList.get(index.nextInt(2));
     }
 
-/*    public static void main(String[] args) {
+  /*  public static void main(String[] args) {
         log.info(getGameID());
     }*/
 

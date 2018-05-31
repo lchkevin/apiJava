@@ -43,8 +43,6 @@ public class AccountController {
         resultList.add(result);
         result = Arrays.asList(accountService.encryptSecurityPassword().split(",,,"));
         resultList.add(result);
-
-
         /**
          * 修改登录密码之后，需要重新登录才能够进行其他的操作，所以这个接口放在最后执行
          * */
