@@ -15,11 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.Date;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static com.apijava.apijava.Utils.Tools.getGameID;
 
 @Slf4j
 @Service
@@ -338,29 +337,6 @@ public class AccountService {
         return sb.toString();
     }
 
-    /**
-     * 获取彩种ID
-     */
-    private static String getGameID() {
-        ArrayList<String> gameIDList = new ArrayList<>();
-        gameIDList.add("HF_AHD11");
-        gameIDList.add("HF_AHK3");
-        gameIDList.add("HF_BJ28");
-        gameIDList.add("HF_BJ5FC");
-        gameIDList.add("HF_BJK3");
-        gameIDList.add("HF_BJPK10");
-        gameIDList.add("HF_CQKL10F");
-        gameIDList.add("HF_CQSSC");
-        gameIDList.add("HF_FFK3");
-        gameIDList.add("HF_FFPK10");
-        gameIDList.add("HF_FFSSC");
-        gameIDList.add("HF_FJD11");
-        gameIDList.add("HF_GDD11");
-        gameIDList.add("HF_GDKL10F");
-        gameIDList.add("HF_GXK3");
-        Random index = new Random();
-        return gameIDList.get(index.nextInt(2));
-    }
 
   /*  public static void main(String[] args) {
         log.info(getGameID());

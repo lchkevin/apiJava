@@ -7,9 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class Tools {
@@ -73,6 +71,30 @@ public class Tools {
         String stime = String.format("%04d-%02d-%02d %02d-%02d-%02d %03d", year, month, day, hour, minute, second, millisecond);
 //        String stime = String.format("%04d%02d%02d%02d%02d%02d%03d", year, month, day, hour, minute, second, millisecond);
         return stime;
+    }
+
+    /**
+     * 获取彩种ID
+     */
+    public static String getGameID() {
+        ArrayList<String> gameIDList = new ArrayList<>();
+        gameIDList.add("HF_AHD11");
+        gameIDList.add("HF_AHK3");
+        gameIDList.add("HF_BJ28");
+        gameIDList.add("HF_BJ5FC");
+        gameIDList.add("HF_BJK3");
+        gameIDList.add("HF_BJPK10");
+        gameIDList.add("HF_CQKL10F");
+        gameIDList.add("HF_CQSSC");
+        gameIDList.add("HF_FFK3");
+        gameIDList.add("HF_FFPK10");
+        gameIDList.add("HF_FFSSC");
+        gameIDList.add("HF_FJD11");
+        gameIDList.add("HF_GDD11");
+        gameIDList.add("HF_GDKL10F");
+        gameIDList.add("HF_GXK3");
+        Random index = new Random();
+        return gameIDList.get(index.nextInt(2));
     }
 }
 
