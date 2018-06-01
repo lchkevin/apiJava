@@ -68,9 +68,8 @@ public class Tools {
         int second = calendar.get(Calendar.SECOND);
         int millisecond = calendar.get(Calendar.MILLISECOND);
 
-        String stime = String.format("%04d-%02d-%02d %02d-%02d-%02d %03d", year, month, day, hour, minute, second, millisecond);
-//        String stime = String.format("%04d%02d%02d%02d%02d%02d%03d", year, month, day, hour, minute, second, millisecond);
-        return stime;
+        //        String stime = String.format("%04d%02d%02d%02d%02d%02d%03d", year, month, day, hour, minute, second, millisecond);
+        return String.format("%04d-%02d-%02d %02d-%02d-%02d %03d", year, month, day, hour, minute, second, millisecond);
     }
 
     /**
