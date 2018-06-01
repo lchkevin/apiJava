@@ -38,9 +38,7 @@ public class ApiTestResultServiceImpl implements ApiTestResultService {
     }
 
     @Override
-    public List<ApiTestResult> getByCreateTime(String time, String systemName) {
-        List<ApiTestResult> resultList;
-        resultList = apiTestResultDao.findAllByCreateTimeAfterAndSystemNameEquals(time, systemName);
-        return resultList;
+    public List<ApiTestResult> getByCreateTimeAndSystemName(String time, String systemName) {
+        return apiTestResultDao.findAllByCreateTimeAfterAndSystemNameEquals(time, systemName);
     }
 }

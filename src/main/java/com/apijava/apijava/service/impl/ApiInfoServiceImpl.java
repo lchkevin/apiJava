@@ -21,6 +21,7 @@ public class ApiInfoServiceImpl implements ApiInfoService {
 
     @Override
     public void insert(ApiInfo apiInfo) {
+        apiInfo.setEvm("SIT");
         apiInfo.setCreatTime((new Tools()).getTimeName());
         apiInfoDao.save(apiInfo);
     }
@@ -36,7 +37,9 @@ public class ApiInfoServiceImpl implements ApiInfoService {
     }
 
     @Override
-    public List<ApiInfo> getByCreateTime(String systemName) {
-        return null;
+    public List<ApiInfo> findAllBySystemName(String systemName) {
+        return apiInfoDao.findAllBySystemName(systemName);
     }
+
+
 }
