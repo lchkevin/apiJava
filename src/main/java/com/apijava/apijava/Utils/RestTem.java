@@ -29,7 +29,7 @@ public class RestTem {
         apiTestResult = tools.toApiTestResult(apiInfo);
         requestHeaders.clear();
         requestHeaders = tools.toHttpHeaders(tools.toJSONObject(apiInfo.getHeader()));
-        HttpEntity<String> requestEntity = new HttpEntity<>(apiInfo.getSetBody() == null ? null: apiInfo.getSetBody().toString(), requestHeaders);
+        HttpEntity<String> requestEntity = new HttpEntity<>(apiInfo.getSetBody(), requestHeaders);
 
         ResponseEntity<String> response;
         try {

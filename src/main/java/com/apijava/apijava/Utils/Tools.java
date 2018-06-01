@@ -1,5 +1,6 @@
 package com.apijava.apijava.Utils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.apijava.apijava.domain.ApiInfo;
 import com.apijava.apijava.domain.ApiTestResult;
 import org.springframework.http.HttpHeaders;
@@ -14,7 +15,7 @@ public class Tools {
 
     private final static String spliteStr = "&&";
 
-    public HttpMethod toHttpMethod(String httpMethodStr) {
+    HttpMethod toHttpMethod(String httpMethodStr) {
         switch (httpMethodStr) {
             case "GET":
                 return HttpMethod.GET;
@@ -28,12 +29,27 @@ public class Tools {
         return null;
     }
 
-    HttpHeaders toHttpHeaders(String headerStr) {
-        if (headerStr.isEmpty()) return null;
-        List<String> listKV = Arrays.asList(headerStr.split(spliteStr));
+    public HttpHeaders toHttpHeaders(JSONObject headerJson) {
+        if (headerJson.isEmpty()) return null;
         HttpHeaders requestHeaders = new HttpHeaders();
-        listKV.forEach(e -> requestHeaders.set(Arrays.asList(e.split(":")).get(0).trim(), Arrays.asList(e.split(":")).get(1).trim()));
+        headerJson.keySet().forEach(e -> requestHeaders.set(e, String.valueOf(headerJson.get(e))));
         return requestHeaders;
+    }
+
+    public JSONObject toJSONObject(String headerStr) {
+        if (headerStr.isEmpty()) return null;
+        //TODO 添加输入字符串的格式校验
+//        if (!headerStr.contains(":")) return null;
+        JSONObject jsonObject = new JSONObject();
+        Arrays.asList(headerStr.split(",")).forEach(e -> jsonObject.put(Arrays.asList(e.split(":")).get(0).trim(),Arrays.asList(e.split(":")).get(1).trim()));
+        return jsonObject;
+    }
+
+    JSONObject toJSON(HttpHeaders httpHeaders) {
+        if (httpHeaders.isEmpty()) return null;
+        JSONObject object = new JSONObject();
+        List<String> list = new ArrayList<>();
+        return object;
     }
 
 
@@ -45,6 +61,7 @@ public class Tools {
         apiTestResult.setSetBody(apiInfo.getSetBody());
         apiTestResult.setSystemName(apiInfo.getSystemName());
         apiTestResult.setUrl(apiInfo.getUrl());
+        apiTestResult.setRemark(apiInfo.getRemark());
         return apiTestResult;
     }
 

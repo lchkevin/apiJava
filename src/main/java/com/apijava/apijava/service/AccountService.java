@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static com.apijava.apijava.Utils.Tools.getGameID;
 
@@ -64,17 +63,18 @@ public class AccountService {
         String url = evm.getProperty("account_url");
         url = url + "/webapi/account/profile/addBookmarks?access_token=" + getToken();
         requestHeaders.clear();
-        requestHeaders.add("Content-Type", "application/json");
-        requestHeaders.add("Accept", "*/*");
+        String headerStr = "Content-Type: application/json,Accept: */*";
+        String bodyStr = "";
         setBody.clear();
         setBody.put("gameId", getGameID());
         log.info(url);
         apiInfo.setUrl(url);
         apiInfo.setSetBody(setBody.toString());
-        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("POST");
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Success");
+        apiInfo.setRemark("User01.1001彩种收藏保存接口-正向用例");
         apiInfoService.insert(apiInfo);
         getPostResponse(apiInfo);
     }
@@ -89,15 +89,18 @@ public class AccountService {
         requestHeaders.clear();
         requestHeaders.add("Content-Type", "application/json");
         requestHeaders.add("Accept", "*/*");
+        String headerStr = "Content-Type: application/json,Accept: */*";
+
         setBody.clear();
         setBody.put("gameId", getGameID());
         log.info(url);
         apiInfo.setUrl(url);
         apiInfo.setSetBody(setBody.toString());
-        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("DELETE");
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Success");
+        apiInfo.setRemark("User02.1001用户彩种收藏删除接口-正向用例");
         apiInfoService.insert(apiInfo);
         getResponse(HttpMethod.DELETE, apiInfo);
     }
@@ -111,12 +114,14 @@ public class AccountService {
         url = url + "/webapi/account/profile/getBookmarks?access_token=" + getToken();
         requestHeaders.clear();
         requestHeaders.add("Accept", "application/json");
+        String headerStr = "Accept: application/json";
         log.info(url);
         apiInfo.setUrl(url);
-        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("GET");
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Success");
+        apiInfo.setRemark("User03.1001用户彩种收藏获取接口-正向用例");
         apiInfoService.insert(apiInfo);
         getGetResponse(apiInfo);
     }
@@ -131,6 +136,7 @@ public class AccountService {
         requestHeaders.clear();
         requestHeaders.add("Content-Type", " application/json");
         requestHeaders.add("Accept", "application/json");
+        String headerStr = "Content-Type: application/json,Accept: application/json";
         setBody.clear();
         setBody.put("username", getRandomString());
         setBody.put("password", "123456");
@@ -141,13 +147,13 @@ public class AccountService {
         setBody.put("qq", "258845215");
         setBody.put("email", "258845215@qq.com");
         log.info(url);
-
         apiInfo.setUrl(url);
         apiInfo.setSetBody(setBody.toString());
-        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("POST");
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Success");
+        apiInfo.setRemark("User04.1001代理创建下层用户-正向用例");
         apiInfoService.insert(apiInfo);
         getPostResponse(apiInfo);
     }
@@ -162,6 +168,7 @@ public class AccountService {
         requestHeaders.clear();
         requestHeaders.add("Content-Type", "application/json");
         requestHeaders.add("Accept", "application/json");
+        String headerStr = "Content-Type: application/json,Accept: application/json";
         setBody.clear();
         setBody.put("email", "321232132@qq.com");
         setBody.put("identityNumber", "110110190005210101");
@@ -173,10 +180,11 @@ public class AccountService {
         setBody.put("username", getUserName());
         apiInfo.setUrl(url);
         apiInfo.setSetBody(setBody.toString());
-        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("PUT");
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Success");
+        apiInfo.setRemark("User05.1001用户更新基本信息-正向用例");
         apiInfoService.insert(apiInfo);
         getResponse(HttpMethod.PUT, apiInfo);
     }
@@ -191,6 +199,7 @@ public class AccountService {
         requestHeaders.clear();
         requestHeaders.add("Content-Type", "application/json");
         requestHeaders.add("Accept", "application/json");
+        String headerStr = "Content-Type: application/json,Accept: application/json";
         setBody.clear();
         setBody.put("mode", "SECURITY_PASSWORD");
         String newpassword = "NmFmMDQ4ZGE3MDc5NzFjNWFmM2RkZWFmYzhlMDkyZDM4Mzc4ZGEwOWFlZTVhMjdjNzYyMzNlNWQ5YWZjYjRhNGY3YjdjYjJmZGYyNjQ4YTBmY2VhMTYyZGMzY2E3ZDc4NWVjZWIzZDQwMDYxOTI2YWE1YzQ4YTA5ODI1ODg1OWExYTFjZGRkZDliOGE1MjA4MjNhMTk2NDkzZWE3MTMwNjM4OTY4MjMwMzJlMmQ1ZTAyYTI2MDczMjdmMmM0M2I0ZTdiZWI2ZDE3OWJkN2NiZjQ0NTIyZDA0ZWEwMmExOTU3MDYxMDFkNmFkNjQ1MjcxNzM1OWI3NTZlYzQyMWRmOA==";
@@ -201,10 +210,11 @@ public class AccountService {
 
         apiInfo.setUrl(url);
         apiInfo.setSetBody(setBody.toString());
-        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("POST");
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Success");
+        apiInfo.setRemark("User06.1001修改用户取款密码-正向用例");
         apiInfoService.insert(apiInfo);
         getPostResponse(apiInfo);
     }
@@ -218,6 +228,7 @@ public class AccountService {
         requestHeaders.clear();
         requestHeaders.add("Content-Type", "application/json");
         requestHeaders.add("Accept", "application/json");
+        String headerStr = "Content-Type: application/json,Accept: application/json";
         setBody.clear();
         setBody.put("mode", "PASSWORD");
         String newpassword = "MDFlYTE1NzU2ZTNiMGE5Y2RjZDZiMDc3NDJkZjljNDBkMTdkNjFhZDM0NWUxODRkNTQ1YzM4ZmI5Mzc4MjA0NWQxZjA0YjA5OTUyOWUxMTVmMGIyNDNmNjMzODJhOWFlZmE0ODkzMjU1YjFiMDEyNzJkMzkwMWI4YzE1OGFmZmZlNDk5YWQ0N2U4MDYzY2IxN2E4NzQ0MDZjODRmZWZhNTc3ZmUwYzVmOGNhY2M5ODQ3M2YwM2NiNGI2Y2FkOTcxZmQ1NWJhMjYyYjliYzQ0NWQ3Y2I4MmQwZTIwNDJiNDUxNzA5MDI2MWE3YjhhZGRiNjQ4M2RkZmQ3MDk5OWE1Yg==";
@@ -228,10 +239,11 @@ public class AccountService {
         ApiInfo apiInfo = new ApiInfo();
         apiInfo.setUrl(url);
         apiInfo.setSetBody(setBody.toString());
-        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("POST");
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Success");
+        apiInfo.setRemark("User07.1001修改用户登录密码-正向用例");
         apiInfoService.insert(apiInfo);
         getPostResponse(apiInfo);
     }
@@ -245,14 +257,16 @@ public class AccountService {
         requestHeaders.clear();
         requestHeaders.add("Content-Type", "application/json");
         requestHeaders.add("Accept", "application/json");
+        String headerStr = "Content-Type: application/json,Accept: application/json";
         setBody.clear();
         log.info(url);
         ApiInfo apiInfo = new ApiInfo();
         apiInfo.setUrl(url);
-        apiInfo.setHeader(requestHeaders.toString());
+        apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("POST");
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Failed");
+        apiInfo.setRemark("User08.2001用户签到-签到失败");
         apiInfoService.insert(apiInfo);
         getPostResponse(apiInfo);
     }
@@ -271,9 +285,7 @@ public class AccountService {
             return;
         }
         tools.responseBodyToApiTestResult(apiTestResult, response);
-        //TODO 添加到结果数据库中
         apiTestResultService.insert(apiTestResult);
-//        return response.getStatusCodeValue() + ",,," + response.getBody() + ",,," + apiInfo.getUrl();
     }
 
     /**
@@ -302,8 +314,8 @@ public class AccountService {
             apiTestResult.setVerification("Success");
         } else apiTestResult.setVerification("Failed");
         apiTestResultService.insert(apiTestResult);
-//        return status + ",,," + body + ",,," + apiInfo.getUrl();
     }
+
 
     /**
      * http-Delete请求结果处理
