@@ -12,6 +12,7 @@ public class ApiInfo {
     @Id
     @GeneratedValue
     private Long id;
+    private String evm;
     private String systemName;
     private String url;
     private String httpMethod;

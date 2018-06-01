@@ -13,6 +13,7 @@ public class ApiTestResult {
     @GeneratedValue
     private Long id;
     private String systemName;
+    private String evm;
     private String url;
     private String httpMethod;
     private String header;
