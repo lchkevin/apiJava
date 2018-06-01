@@ -8,5 +8,5 @@ public interface ApiTestResultService {
     void insert(ApiTestResult apiTestResult);
     void delete(ApiTestResult apiTestResult);
     void update(ApiTestResult apiTestResult);
-    List<ApiTestResult> getByCreateTime(String systemName);
+    List<ApiTestResult> getByCreateTime(String time, String systemName);
 }

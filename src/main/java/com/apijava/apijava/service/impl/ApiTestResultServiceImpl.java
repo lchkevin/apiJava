@@ -22,6 +22,7 @@ public class ApiTestResultServiceImpl implements ApiTestResultService {
 
     @Override
     public void insert(ApiTestResult apiTestResult) {
+        apiTestResult.setEvm("SIT");
         apiTestResult.setCreateTime((new Tools()).getTimeName());
         apiTestResultDao.save(apiTestResult);
     }
@@ -37,7 +38,9 @@ public class ApiTestResultServiceImpl implements ApiTestResultService {
     }
 
     @Override
-    public List<ApiTestResult> getByCreateTime(String systemName) {
-        return null;
+    public List<ApiTestResult> getByCreateTime(String time, String systemName) {
+        List<ApiTestResult> resultList;
+        resultList = apiTestResultDao.findAllByCreateTimeAfterAndSystemNameEquals(time, systemName);
+        return resultList;
     }
 }
