@@ -1,5 +1,6 @@
 package com.apijava.apijava.service.impl;
 
+import com.apijava.apijava.Utils.Tools;
 import com.apijava.apijava.dao.ApiTestResultDao;
 import com.apijava.apijava.domain.ApiTestResult;
 import com.apijava.apijava.service.ApiTestResultService;
@@ -17,10 +18,11 @@ public class ApiTestResultServiceImpl implements ApiTestResultService {
     public ApiTestResultServiceImpl(ApiTestResultDao apiTestResultDao) {
         this.apiTestResultDao = apiTestResultDao;
     }
+    
 
     @Override
-    public void save(ApiTestResult apiTestResult) {
-
+    public void insert(ApiTestResult apiTestResult) {
+        apiTestResult.setCreateTime((new Tools()).getTimeName());
         apiTestResultDao.save(apiTestResult);
     }
 

@@ -47,6 +47,13 @@ public class UserLogin {
             return null;
         }
     }
+
+    public List<String> login1() {
+        List<String> list = new ArrayList<>();
+        list.add("112908");
+        list.add("123123123123123");
+        return list;
+    }
  /*   public static void main(String[] args) {
         UserLogin userLogin = new UserLogin();
         userLogin.login();
