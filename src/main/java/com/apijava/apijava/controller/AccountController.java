@@ -1,8 +1,10 @@
 package com.apijava.apijava.controller;
 
+import com.apijava.apijava.Utils.Tools;
 import com.apijava.apijava.domain.APIResult;
 import com.apijava.apijava.domain.TestResultSummary;
 import com.apijava.apijava.service.AccountService;
+import com.apijava.apijava.service.ApiTestResultService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,49 +21,43 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AccountController {
 
     private AccountService accountService;
+    private final ApiTestResultService apiTestResultService;
 
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService, ApiTestResultService apiTestResultService) {
         this.accountService = accountService;
+        this.apiTestResultService = apiTestResultService;
     }
 
     @RequestMapping("/test")
     public ModelAndView entitlement() {
+        String time = (new Tools()).getTimeName();
         AtomicInteger success = new AtomicInteger();
         AtomicInteger failed = new AtomicInteger();
         AtomicInteger total = new AtomicInteger();
         List<List<String>> resultList = new ArrayList<>();
-        List<String> result;
-        result = Arrays.asList(accountService.addBookmarks().split(",,,"));
-        resultList.add(result);
-        result = Arrays.asList(accountService.getBookmarks().split(",,,"));
-        resultList.add(result);
-        result = Arrays.asList(accountService.delBookmarks().split(",,,"));
-        resultList.add(result);
-        result = Arrays.asList(accountService.addAgentUser().split(",,,"));
-        resultList.add(result);
-        result = Arrays.asList(accountService.updateUserInfo().split(",,,"));
-        resultList.add(result);
-        result = Arrays.asList(accountService.encryptSecurityPassword().split(",,,"));
-        resultList.add(result);
-        /**
-         * 修改登录密码之后，需要重新登录才能够进行其他的操作，所以这个接口放在最后执行
-         * */
-        result = Arrays.asList(accountService.encryptLoginPassword().split(",,,"));
-        resultList.add(result);
-        result = Arrays.asList(accountService.signIn().split(",,,"));
-        resultList.add(result);
+        accountService.addBookmarks();
+        accountService.getBookmarks();
+        accountService.delBookmarks();
+        accountService.addAgentUser();
+        accountService.updateUserInfo();
+        accountService.encryptSecurityPassword();
+        accountService.encryptLoginPassword();
+        accountService.signIn();
+        resultList.clear();
+        apiTestResultService.getByCreateTime(time, "account-user").forEach(e ->
+                resultList.add(Arrays.asList(e.getUrl(), e.getResponseBody(), String.valueOf(e.getStatus_code()), e.getVerification())));
         List<APIResult> apiResults = new ArrayList<>();
         List<TestResultSummary> testResultSummaries = new ArrayList<>();
 
         resultList.forEach(list -> {
-            if (list.get(0).startsWith("2")) {
+            if (list.get(3).startsWith("Success")) {
                 success.addAndGet(1);
             } else {
                 failed.addAndGet(1);
             }
             total.addAndGet(1);
-            APIResult APIResult = new APIResult(String.valueOf(total.get()), list.get(2), list.get(1), list.get(0));
-            apiResults.add(APIResult);
+            APIResult apiResult = new APIResult(String.valueOf(total.get()), list.get(0), list.get(1), list.get(2), list.get(3));
+            apiResults.add(apiResult);
         });
 
         TestResultSummary testResultSummary = new TestResultSummary(total, success, failed);

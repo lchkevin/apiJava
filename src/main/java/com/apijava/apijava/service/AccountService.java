@@ -59,7 +59,7 @@ public class AccountService {
     /**
      * user.1.彩种收藏保存接口
      */
-    public String addBookmarks() {
+    public void addBookmarks() {
         ApiInfo apiInfo = new ApiInfo();
         String url = evm.getProperty("account_url");
         url = url + "/webapi/account/profile/addBookmarks?access_token=" + getToken();
@@ -76,13 +76,13 @@ public class AccountService {
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Success");
         apiInfoService.insert(apiInfo);
-        return getPostResponse(apiInfo);
+        getPostResponse(apiInfo);
     }
 
     /**
      * user.2.用户彩种收藏删除接口
      */
-    public String delBookmarks() {
+    public void delBookmarks() {
         ApiInfo apiInfo = new ApiInfo();
         String url = evm.getProperty("account_url");
         url = url + "/webapi/account/profile/delBookmarks?access_token=" + getToken();
@@ -99,13 +99,13 @@ public class AccountService {
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Success");
         apiInfoService.insert(apiInfo);
-        return getResponse(HttpMethod.DELETE, apiInfo);
+        getResponse(HttpMethod.DELETE, apiInfo);
     }
 
     /**
      * user.3.用户彩种收藏获取接口
      */
-    public String getBookmarks() {
+    public void getBookmarks() {
         ApiInfo apiInfo = new ApiInfo();
         String url = evm.getProperty("account_url");
         url = url + "/webapi/account/profile/getBookmarks?access_token=" + getToken();
@@ -118,13 +118,13 @@ public class AccountService {
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Success");
         apiInfoService.insert(apiInfo);
-        return getGetResponse(apiInfo);
+        getGetResponse(apiInfo);
     }
 
     /**
      * user.4.代理创建下层用户
      */
-    public String addAgentUser() {
+    public void addAgentUser() {
         ApiInfo apiInfo = new ApiInfo();
         String url = evm.getProperty("account_url");
         url = url + "/webapi/account/users?access_token=" + getToken();
@@ -149,13 +149,13 @@ public class AccountService {
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Success");
         apiInfoService.insert(apiInfo);
-        return getPostResponse(apiInfo);
+        getPostResponse(apiInfo);
     }
 
     /**
      * user.5.用户更新基本信息
      */
-    public String updateUserInfo() {
+    public void updateUserInfo() {
         ApiInfo apiInfo = new ApiInfo();
         String url = evm.getProperty("account_url");
         url = url + "/webapi/account/users/?access_token=" + getToken();
@@ -178,13 +178,13 @@ public class AccountService {
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Success");
         apiInfoService.insert(apiInfo);
-        return getResponse(HttpMethod.PUT, apiInfo);
+        getResponse(HttpMethod.PUT, apiInfo);
     }
 
     /**
      * user.6.修改用户取款密码
      */
-    public String encryptSecurityPassword() {
+    public void encryptSecurityPassword() {
         ApiInfo apiInfo = new ApiInfo();
         String url = evm.getProperty("account_url");
         url = url + "/webapi/account/users/change/encryptPassword?access_token=" + getToken();
@@ -206,13 +206,13 @@ public class AccountService {
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Success");
         apiInfoService.insert(apiInfo);
-        return getPostResponse(apiInfo);
+        getPostResponse(apiInfo);
     }
 
     /**
      * user.7.修改用户登录密码
      */
-    public String encryptLoginPassword() {
+    public void encryptLoginPassword() {
         String url = evm.getProperty("account_url");
         url = url + "/webapi/account/users/change/encryptPassword?access_token=" + getToken();
         requestHeaders.clear();
@@ -233,13 +233,13 @@ public class AccountService {
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Success");
         apiInfoService.insert(apiInfo);
-        return getPostResponse(apiInfo);
+        getPostResponse(apiInfo);
     }
 
     /**
      * 用户签到
      */
-    public String signIn() {
+    public void signIn() {
         String url = evm.getProperty("account_url");
         url = url + "/webapi/operate/users/signIn?access_token=" + getToken();
         requestHeaders.clear();
@@ -254,44 +254,46 @@ public class AccountService {
         apiInfo.setSystemName("account-user");
         apiInfo.setExpectResult("Failed");
         apiInfoService.insert(apiInfo);
-        return getPostResponse(apiInfo);
+        getPostResponse(apiInfo);
     }
 
 
     /**
      * http-Post请求结果处理
      */
-    private String getPostResponse(ApiInfo apiInfo) {
+    private void getPostResponse(ApiInfo apiInfo) {
         ApiTestResult apiTestResult;
         apiTestResult = tools.toApiTestResult(apiInfo);
         try {
             response = template.postForEntity(apiInfo.getUrl(), setBody, String.class);
         } catch (HttpClientErrorException e) {
-            return getExceptionResponse(apiInfo, apiTestResult, e);
+            getExceptionResponse(apiInfo, apiTestResult, e);
+            return;
         }
         tools.responseBodyToApiTestResult(apiTestResult, response);
         //TODO 添加到结果数据库中
         apiTestResultService.insert(apiTestResult);
-        return response.getStatusCodeValue() + ",,," + response.getBody() + ",,," + apiInfo.getUrl();
+//        return response.getStatusCodeValue() + ",,," + response.getBody() + ",,," + apiInfo.getUrl();
     }
 
     /**
      * http-Get请求结果处理
      */
-    private String getGetResponse(ApiInfo apiInfo) {
+    private void getGetResponse(ApiInfo apiInfo) {
         ApiTestResult apiTestResult;
         apiTestResult = tools.toApiTestResult(apiInfo);
         try {
             response = template.getForEntity(apiInfo.getUrl(), String.class);
         } catch (HttpClientErrorException e) {
-            return getExceptionResponse(apiInfo, apiTestResult, e);
+            getExceptionResponse(apiInfo, apiTestResult, e);
+            return;
         }
         tools.responseBodyToApiTestResult(apiTestResult, response);
         apiTestResultService.insert(apiTestResult);
-        return response.getStatusCodeValue() + ",,," + response.getBody() + ",,," + apiInfo.getUrl();
+//        return response.getStatusCodeValue() + ",,," + response.getBody() + ",,," + apiInfo.getUrl();
     }
 
-    private String getExceptionResponse(ApiInfo apiInfo, ApiTestResult apiTestResult, HttpClientErrorException e) {
+    private void getExceptionResponse(ApiInfo apiInfo, ApiTestResult apiTestResult, HttpClientErrorException e) {
         String status = e.getMessage().trim().substring(0, 3);
         String body = e.getResponseBodyAsString();
         apiTestResult.setStatus_code(Integer.parseInt(status));
@@ -300,14 +302,14 @@ public class AccountService {
             apiTestResult.setVerification("Success");
         } else apiTestResult.setVerification("Failed");
         apiTestResultService.insert(apiTestResult);
-        return status + ",,," + body + ",,," + apiInfo.getUrl();
+//        return status + ",,," + body + ",,," + apiInfo.getUrl();
     }
 
     /**
      * http-Delete请求结果处理
      * http-put请求结果处理
      */
-    private String getResponse(HttpMethod httpMethod, ApiInfo apiInfo) {
+    private void getResponse(HttpMethod httpMethod, ApiInfo apiInfo) {
         ApiTestResult apiTestResult;
         apiTestResult = tools.toApiTestResult(apiInfo);
         HttpEntity<String> requestEntity = new HttpEntity<>(setBody.toString(), requestHeaders);
@@ -316,11 +318,12 @@ public class AccountService {
         try {
             response = template.exchange(apiInfo.getUrl(), httpMethod, requestEntity, String.class);
         } catch (HttpClientErrorException e) {
-            return getExceptionResponse(apiInfo, apiTestResult, e);
+            getExceptionResponse(apiInfo, apiTestResult, e);
+            return;
         }
         tools.responseBodyToApiTestResult(apiTestResult, response);
         apiTestResultService.insert(apiTestResult);
-        return response.getStatusCodeValue() + ",,," + response.getBody() + ",,," + apiInfo.getUrl();
+//        return response.getStatusCodeValue() + ",,," + response.getBody() + ",,," + apiInfo.getUrl();
     }
 
     /**
