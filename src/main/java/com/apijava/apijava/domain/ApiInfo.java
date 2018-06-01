@@ -15,6 +15,7 @@ public class ApiInfo {
     private String evm;
     private String systemName;
     private String url;
+    private String remark;
     private String httpMethod;
     private String header;
     private String setBody;

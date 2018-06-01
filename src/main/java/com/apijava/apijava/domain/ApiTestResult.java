@@ -15,6 +15,7 @@ public class ApiTestResult {
     private String systemName;
     private String evm;
     private String url;
+    private String remark;
     private String httpMethod;
     private String header;
     private String setBody;
