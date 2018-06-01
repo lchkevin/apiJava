@@ -48,7 +48,8 @@
             <tr th:each="testResultSummary : ${testResultSummaries}">
                 <td th:text="${testResultSummary.total}"></td>
                 <td class="alert-success text-center" th:text="${testResultSummary.success}"></td>
-                <td class="alert-failed text-center" th:text="${testResultSummary.failed}"></td>
+                <td th:classappend="${String.equals(testResultSummary.failed, 0)}? text-center : alert-failed" th:text="${testResultSummary.failed}"></td>
+                <!--<td class="alert-failed text-center" th:text="${testResultSummary.failed}"></td>-->
             </tr>
         </table>
         <table class="table table-striped table-bordered text-center">
@@ -56,13 +57,16 @@
                 <td>编号</td>
                 <td>接口名称</td>
                 <td>响应报文</td>
+                <td>状态码</td>
                 <td>结果</td>
             </tr>
             <tr th:each="apiResult : ${apiResults}" class="text-info" >
                 <td th:text="${apiResult.id}">编号</td>
                 <td th:text="${apiResult.url}">接口名称</td>
-                <td th:text="${#strings.equals(apiResult.body, 'null')}? '' : ${apiResult.body}">响应报文</td>
-                <td th:classappend="${#strings.startsWith(apiResult.result,'2')}?  alert-success : alert-failed" th:text="${apiResult.result}">执行结果</td>
+                <td th:text="${#strings.equals(apiResult.responseBody, 'null')}? 'no responseBody' : ${apiResult.responseBody}">响应报文</td>
+                <td th:text="${apiResult.status_code}">状态码</td>
+                <td th:classappend="${#strings.equals(apiResult.result,'Success')}?  alert-success : alert-failed" th:text="${apiResult.result}">执行结果</td>
+                <!--<td th:classappend="${#strings.startsWith(apiResult.result,'2')}?  alert-success : alert-failed" th:text="${apiResult.result}">执行结果</td>-->
             </tr>
         </table>
     </div>
