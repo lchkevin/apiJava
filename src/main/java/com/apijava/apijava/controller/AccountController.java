@@ -7,6 +7,7 @@ import com.apijava.apijava.domain.TestResultSummary;
 import com.apijava.apijava.service.AccountService;
 import com.apijava.apijava.service.ApiInfoService;
 import com.apijava.apijava.service.ApiTestResultService;
+import com.apijava.apijava.service.UserLogin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,12 +27,22 @@ public class AccountController {
     private final ApiTestResultService apiTestResultService;
     private final ApiInfoService apiInfoService;
     private final RestTem restTem;
+    private UserLogin userLogin;
 
-    public AccountController(AccountService accountService, ApiTestResultService apiTestResultService, ApiInfoService apiInfoService, RestTem restTem) {
+    public AccountController(AccountService accountService, ApiTestResultService apiTestResultService, ApiInfoService apiInfoService, RestTem restTem, UserLogin userLogin) {
         this.accountService = accountService;
         this.apiTestResultService = apiTestResultService;
         this.apiInfoService = apiInfoService;
         this.restTem = restTem;
+        this.userLogin = userLogin;
+    }
+
+    private List<String> login() {
+        return userLogin.login();
+    }
+
+    private String getToken() {
+        return login().get(1);
     }
 
     @RequestMapping("sqlite")
@@ -41,21 +52,31 @@ public class AccountController {
         AtomicInteger failed = new AtomicInteger();
         AtomicInteger total = new AtomicInteger();
         List<List<String>> resultList = new ArrayList<>();
-        String token = "425c735b-788f-4b94-81ad-300f510f8292";
 
         resultList.clear();
         //TODO 从sqlite中获取account的接口进行测试
         String time = (new Tools()).getTimeName();
-        apiInfoService.findAllBySystemName("account-user").forEach(e -> {
-            if (e.getUrl().contains("XXXX")) e.setUrl(e.getUrl().replaceAll("XXXX", token));
+        apiInfoService.findAllBySystemName("account_user").forEach(e -> {
+            e.setUri(changeUrlToken(e.getUri()));
             restTem.excute(e);
         });
         //TODO 获取测试结果
-        apiTestResultService.getByCreateTimeAndSystemName(time, "account-user").forEach(e ->
-                resultList.add(Arrays.asList(e.getUrl(), e.getRemark(), e.getResponseBody() == null ? null: e.getResponseBody().toString(), String.valueOf(e.getStatus_code()), e.getVerification())));
+        apiTestResultService.getByCreateTimeAndSystemName(time, "account_user").forEach(e ->
+                resultList.add(Arrays.asList(e.getUri(), e.getRemark(), e.getResponseBody(), String.valueOf(e.getStatus_code()), e.getVerification())));
         List<APIResult> apiResults = new ArrayList<>();
         List<TestResultSummary> testResultSummaries = new ArrayList<>();
 
+        processTestResultSummary(success, failed, total, resultList, apiResults);
+
+        TestResultSummary testResultSummary = new TestResultSummary(String.valueOf(total), String.valueOf(success), String.valueOf(failed));
+        testResultSummaries.add(testResultSummary);
+        ModelAndView modelAndView = new ModelAndView("/template");
+        modelAndView.addObject("apiResults", apiResults);
+        modelAndView.addObject("testResultSummaries", testResultSummaries);
+        return modelAndView;
+    }
+
+    private void processTestResultSummary(AtomicInteger success, AtomicInteger failed, AtomicInteger total, List<List<String>> resultList, List<APIResult> apiResults) {
         resultList.forEach(list -> {
             if (list.get(4).startsWith("Success")) {
                 success.addAndGet(1);
@@ -66,13 +87,6 @@ public class AccountController {
             APIResult apiResult = new APIResult(String.valueOf(total.get()), list.get(0), list.get(1), list.get(2), list.get(3), list.get(4));
             apiResults.add(apiResult);
         });
-
-        TestResultSummary testResultSummary = new TestResultSummary(String.valueOf(total), String.valueOf(success), String.valueOf(failed));
-        testResultSummaries.add(testResultSummary);
-        ModelAndView modelAndView = new ModelAndView("/template");
-        modelAndView.addObject("apiResults", apiResults);
-        modelAndView.addObject("testResultSummaries", testResultSummaries);
-        return modelAndView;
     }
 
     @RequestMapping("/test111")
@@ -91,21 +105,12 @@ public class AccountController {
         accountService.encryptLoginPassword();
         accountService.signIn();
         resultList.clear();
-        apiTestResultService.getByCreateTimeAndSystemName(time, "account-user").forEach(e ->
-                resultList.add(Arrays.asList(e.getUrl(), e.getRemark(), e.getResponseBody() == null ? null: e.getResponseBody().toString(), String.valueOf(e.getStatus_code()), e.getVerification())));
+        apiTestResultService.getByCreateTimeAndSystemName(time, "account_user").forEach(e ->
+                resultList.add(Arrays.asList(e.getUri(), e.getRemark(), e.getResponseBody(), String.valueOf(e.getStatus_code()), e.getVerification())));
         List<APIResult> apiResults = new ArrayList<>();
         List<TestResultSummary> testResultSummaries = new ArrayList<>();
 
-        resultList.forEach(list -> {
-            if (list.get(4).startsWith("Success")) {
-                success.addAndGet(1);
-            } else {
-                failed.addAndGet(1);
-            }
-            total.addAndGet(1);
-            APIResult apiResult = new APIResult(String.valueOf(total.get()), list.get(0), list.get(1), list.get(2), list.get(3), list.get(4));
-            apiResults.add(apiResult);
-        });
+        processTestResultSummary(success, failed, total, resultList, apiResults);
 
         TestResultSummary testResultSummary = new TestResultSummary(String.valueOf(total), String.valueOf(success), String.valueOf(failed));
         testResultSummaries.add(testResultSummary);
@@ -113,6 +118,12 @@ public class AccountController {
         modelAndView.addObject("apiResults", apiResults);
         modelAndView.addObject("testResultSummaries", testResultSummaries);
         return modelAndView;
+    }
+
+    private String  changeUrlToken(String url) {
+        if (url.contains("XXXX")) url = url.replaceAll("XXXX", getToken());
+        return url;
+
     }
 
     public static void main(String[] args) {
