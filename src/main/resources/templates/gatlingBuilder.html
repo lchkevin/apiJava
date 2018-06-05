@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>接口转gatling脚本</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+
+<div style="text-align: center; margin:0 auto; width: 1000px; ">
+    <h1>接口转gatling脚本成功（Java）</h1>
+    <table width="100%" border="1" cellspacing="1" cellpadding="1">
+        <tr>
+            <td>总数</td>
+            <td>成功</td>
+            <td>失败</td>
+        </tr>
+        <tr th:each="testResultSummary : ${testResultSummaries}">
+            <td th:text="${testResultSummary.total}"></td>
+            <td th:text="${testResultSummary.success}"></td>
+            <td th:text="${testResultSummary.failed}"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
