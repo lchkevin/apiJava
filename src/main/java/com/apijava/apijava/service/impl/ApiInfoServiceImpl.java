@@ -41,5 +41,10 @@ public class ApiInfoServiceImpl implements ApiInfoService {
         return apiInfoDao.findAllBySystemName(systemName);
     }
 
+    @Override
+    public List<ApiInfo> findAllByPressFlagAndSystemName(boolean pressFlag, String systemName) {
+        return apiInfoDao.findAllByPressFlagAndSystemName(pressFlag, systemName);
+    }
+
 
 }

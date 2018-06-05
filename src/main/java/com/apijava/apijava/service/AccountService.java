@@ -60,21 +60,22 @@ public class AccountService {
      */
     public void addBookmarks() {
         ApiInfo apiInfo = new ApiInfo();
-        String url = evm.getProperty("account_url");
-        url = url + "/webapi/account/profile/addBookmarks?access_token=" + getToken();
+        String baseUrl = evm.getProperty("account_url");
+        String uri = "/api/v1/account/webapi/account/profile/addBookmarks?access_token=XXXX";
         requestHeaders.clear();
         String headerStr = "Content-Type: application/json,Accept: */*";
-        String bodyStr = "";
         setBody.clear();
         setBody.put("gameId", getGameID());
-        log.info(url);
-        apiInfo.setUrl(url);
+        apiInfo.setBaseUrl(baseUrl);
+        apiInfo.setUri(uri);
         apiInfo.setSetBody(setBody.toString());
         apiInfo.setHeader(headerStr);
-        apiInfo.setHttpMethod("POST");
-        apiInfo.setSystemName("account-user");
+        apiInfo.setHttpMethod("post");
+        apiInfo.setSystemName("account_user");
         apiInfo.setExpectResult("Success");
         apiInfo.setRemark("User01.1001彩种收藏保存接口-正向用例");
+        apiInfo.setPressFlag(true);
+        apiInfo.setGatlingTestName("userAddBookmarks");
         apiInfoService.insert(apiInfo);
         getPostResponse(apiInfo);
     }
@@ -84,8 +85,8 @@ public class AccountService {
      */
     public void delBookmarks() {
         ApiInfo apiInfo = new ApiInfo();
-        String url = evm.getProperty("account_url");
-        url = url + "/webapi/account/profile/delBookmarks?access_token=" + getToken();
+        String baseUrl = evm.getProperty("account_url");
+        String uri = "/webapi/account/profile/delBookmarks?access_token=XXXX";
         requestHeaders.clear();
         requestHeaders.add("Content-Type", "application/json");
         requestHeaders.add("Accept", "*/*");
@@ -93,14 +94,16 @@ public class AccountService {
 
         setBody.clear();
         setBody.put("gameId", getGameID());
-        log.info(url);
-        apiInfo.setUrl(url);
+        apiInfo.setBaseUrl(baseUrl);
+        apiInfo.setUri(uri);
         apiInfo.setSetBody(setBody.toString());
         apiInfo.setHeader(headerStr);
-        apiInfo.setHttpMethod("DELETE");
-        apiInfo.setSystemName("account-user");
+        apiInfo.setHttpMethod("delete");
+        apiInfo.setSystemName("account_user");
         apiInfo.setExpectResult("Success");
         apiInfo.setRemark("User02.1001用户彩种收藏删除接口-正向用例");
+        apiInfo.setPressFlag(true);
+        apiInfo.setGatlingTestName("userDelBookmarks");
         apiInfoService.insert(apiInfo);
         getResponse(HttpMethod.DELETE, apiInfo);
     }
@@ -110,18 +113,21 @@ public class AccountService {
      */
     public void getBookmarks() {
         ApiInfo apiInfo = new ApiInfo();
-        String url = evm.getProperty("account_url");
-        url = url + "/webapi/account/profile/getBookmarks?access_token=" + getToken();
+        String baseUrl = evm.getProperty("account_url");
+        String uri = "/api/v1/account/webapi/account/profile/getBookmarks?access_token=XXXX";
         requestHeaders.clear();
         requestHeaders.add("Accept", "application/json");
         String headerStr = "Accept: application/json";
-        log.info(url);
-        apiInfo.setUrl(url);
+        log.info(baseUrl + uri);
+        apiInfo.setBaseUrl(baseUrl);
+        apiInfo.setUri(uri);
         apiInfo.setHeader(headerStr);
-        apiInfo.setHttpMethod("GET");
-        apiInfo.setSystemName("account-user");
+        apiInfo.setHttpMethod("get");
+        apiInfo.setSystemName("account_user");
         apiInfo.setExpectResult("Success");
         apiInfo.setRemark("User03.1001用户彩种收藏获取接口-正向用例");
+        apiInfo.setPressFlag(true);
+        apiInfo.setGatlingTestName("userGetBookmarks");
         apiInfoService.insert(apiInfo);
         getGetResponse(apiInfo);
     }
@@ -131,8 +137,8 @@ public class AccountService {
      */
     public void addAgentUser() {
         ApiInfo apiInfo = new ApiInfo();
-        String url = evm.getProperty("account_url");
-        url = url + "/webapi/account/users?access_token=" + getToken();
+        String baseUrl = evm.getProperty("account_url");
+        String uri =  "/api/v1/account/webapi/account/users?access_token=XXXX";
         requestHeaders.clear();
         requestHeaders.add("Content-Type", " application/json");
         requestHeaders.add("Accept", "application/json");
@@ -146,14 +152,17 @@ public class AccountService {
         setBody.put("phoneNumber", "13996323363");
         setBody.put("qq", "258845215");
         setBody.put("email", "258845215@qq.com");
-        log.info(url);
-        apiInfo.setUrl(url);
+        log.info(baseUrl +  uri);
+        apiInfo.setBaseUrl(baseUrl);
+        apiInfo.setUri(uri);
         apiInfo.setSetBody(setBody.toString());
         apiInfo.setHeader(headerStr);
-        apiInfo.setHttpMethod("POST");
-        apiInfo.setSystemName("account-user");
+        apiInfo.setHttpMethod("post");
+        apiInfo.setSystemName("account_user");
         apiInfo.setExpectResult("Success");
         apiInfo.setRemark("User04.1001代理创建下层用户-正向用例");
+        apiInfo.setPressFlag(true);
+        apiInfo.setGatlingTestName("agentCreateLowUserAccount");
         apiInfoService.insert(apiInfo);
         getPostResponse(apiInfo);
     }
@@ -163,8 +172,8 @@ public class AccountService {
      */
     public void updateUserInfo() {
         ApiInfo apiInfo = new ApiInfo();
-        String url = evm.getProperty("account_url");
-        url = url + "/webapi/account/users/?access_token=" + getToken();
+        String baseUrl = evm.getProperty("account_url");
+        String uri = "/api/v1/account/webapi/account/users/?access_token=XXXX";
         requestHeaders.clear();
         requestHeaders.add("Content-Type", "application/json");
         requestHeaders.add("Accept", "application/json");
@@ -178,13 +187,17 @@ public class AccountService {
         setBody.put("prizeGroup", 1978);
         setBody.put("qq", "321232132");
         setBody.put("username", getUserName());
-        apiInfo.setUrl(url);
+        log.info(baseUrl + uri);
+        apiInfo.setBaseUrl(baseUrl);
+        apiInfo.setUri(uri);
         apiInfo.setSetBody(setBody.toString());
         apiInfo.setHeader(headerStr);
-        apiInfo.setHttpMethod("PUT");
-        apiInfo.setSystemName("account-user");
+        apiInfo.setHttpMethod("put");
+        apiInfo.setSystemName("account_user");
         apiInfo.setExpectResult("Success");
         apiInfo.setRemark("User05.1001用户更新基本信息-正向用例");
+        apiInfo.setPressFlag(true);
+        apiInfo.setGatlingTestName("agentCreateLowUserAccount");
         apiInfoService.insert(apiInfo);
         getResponse(HttpMethod.PUT, apiInfo);
     }
@@ -194,8 +207,8 @@ public class AccountService {
      */
     public void encryptSecurityPassword() {
         ApiInfo apiInfo = new ApiInfo();
-        String url = evm.getProperty("account_url");
-        url = url + "/webapi/account/users/change/encryptPassword?access_token=" + getToken();
+        String baseUrl = evm.getProperty("account_url");
+        String uri = "/api/v1/account/webapi/account/users/change/encryptPassword?access_token=XXXX";
         requestHeaders.clear();
         requestHeaders.add("Content-Type", "application/json");
         requestHeaders.add("Accept", "application/json");
@@ -206,15 +219,17 @@ public class AccountService {
         setBody.put("newPassword", newpassword);
         String password = "NTIwMmY1MDIyZjcwNGU3MmM2NmU4MGY4NjM0MGFlYzdlZTVkZGNmM2Q0NDcwYWYyMDM3MThjMzVkN2U1NDQ5YjhmYTcxNzc2ODAyYmRkMmQ3MDU1YjQwNGQ2Y2RkMTIwZTNiYTk4ZDdjMjdiNWE3YzlhOWJlMjEzNWYxNjk1YmExOTVkMjY5NmNmOGRjN2M3ZjVhZTkxNjc3NmVmMTczOThmMDJhMDc4YjQ2N2Y4ZTBlMzkyNTI1OTAwNzA2NmEyYTU2NGViNzliNzZiZjg2YTFkNmYzOTc4ZGYxMjUwYTJlYmRkZjQzODRhNTliNmZiNThlNjYzMmIwMDAxMGQwYQ==";
         setBody.put("password", password);
-        log.info(url);
-
-        apiInfo.setUrl(url);
+        log.info(baseUrl + uri);
+        apiInfo.setBaseUrl(baseUrl);
+        apiInfo.setUri(uri);
         apiInfo.setSetBody(setBody.toString());
         apiInfo.setHeader(headerStr);
-        apiInfo.setHttpMethod("POST");
-        apiInfo.setSystemName("account-user");
+        apiInfo.setHttpMethod("post");
+        apiInfo.setSystemName("account_user");
         apiInfo.setExpectResult("Success");
         apiInfo.setRemark("User06.1001修改用户取款密码-正向用例");
+        apiInfo.setPressFlag(true);
+        apiInfo.setGatlingTestName("changeEncryptSecurityPassword");
         apiInfoService.insert(apiInfo);
         getPostResponse(apiInfo);
     }
@@ -223,8 +238,8 @@ public class AccountService {
      * user.7.修改用户登录密码
      */
     public void encryptLoginPassword() {
-        String url = evm.getProperty("account_url");
-        url = url + "/webapi/account/users/change/encryptPassword?access_token=" + getToken();
+        String baseUrl = evm.getProperty("account_url");
+        String uri = "/api/v1/account/webapi/account/users/change/encryptPassword?access_token=XXXX";
         requestHeaders.clear();
         requestHeaders.add("Content-Type", "application/json");
         requestHeaders.add("Accept", "application/json");
@@ -235,15 +250,18 @@ public class AccountService {
         setBody.put("newPassword", newpassword);
         String password = "MTQ5MjMzOTg0Njc4Mzg5YjM1Mzg5NzQxYmZhOWY1MGIzNGRlMTcxOTY5NTA0Mzc3NWYyMGNlNjNjZjNmN2I1NjMyOWMxMzA1MzJmYzhkN2QwNTQ5YTMyYzQ1NjBlODZkYWRlY2Y2M2QzZDhjMDUxYjA4YzhkODkzYjY3YzI0ODk4ZjU3ZTM2NmZiODZkYmQwMmYwMTNmOGE4MWJlZGVhZjNmZjNmNWJkMzg1ZGM0ZWRlZjJiZjAxZGRlODIzNTkyNjg4OGMxZDM5OTNmMDM2Y2ZkNDg2YmQzNjY2MGRjZDZjNDBhMWI1M2VlOTMxZDBlYmY4YjE3NDU1ZDk3ZGJiMg==";
         setBody.put("password", password);
-        log.info(url);
+        log.info(baseUrl + uri);
         ApiInfo apiInfo = new ApiInfo();
-        apiInfo.setUrl(url);
+        apiInfo.setBaseUrl(baseUrl);
+        apiInfo.setUri(uri);
         apiInfo.setSetBody(setBody.toString());
         apiInfo.setHeader(headerStr);
-        apiInfo.setHttpMethod("POST");
-        apiInfo.setSystemName("account-user");
+        apiInfo.setHttpMethod("post");
+        apiInfo.setSystemName("account_user");
         apiInfo.setExpectResult("Success");
         apiInfo.setRemark("User07.1001修改用户登录密码-正向用例");
+        apiInfo.setPressFlag(true);
+        apiInfo.setGatlingTestName("changeEncryptLoginPassword");
         apiInfoService.insert(apiInfo);
         getPostResponse(apiInfo);
     }
@@ -252,21 +270,24 @@ public class AccountService {
      * 用户签到
      */
     public void signIn() {
-        String url = evm.getProperty("account_url");
-        url = url + "/webapi/operate/users/signIn?access_token=" + getToken();
+        String baseUrl = evm.getProperty("account_url");
+        String uri = "/api/v1/account/webapi/operate/users/signIn?access_token=XXXX";
         requestHeaders.clear();
         requestHeaders.add("Content-Type", "application/json");
         requestHeaders.add("Accept", "application/json");
         String headerStr = "Content-Type: application/json,Accept: application/json";
         setBody.clear();
-        log.info(url);
+        log.info(baseUrl + uri);
         ApiInfo apiInfo = new ApiInfo();
-        apiInfo.setUrl(url);
+        apiInfo.setUri(uri);
+        apiInfo.setBaseUrl(baseUrl);
         apiInfo.setHeader(headerStr);
-        apiInfo.setHttpMethod("POST");
-        apiInfo.setSystemName("account-user");
+        apiInfo.setHttpMethod("post");
+        apiInfo.setSystemName("account_user");
         apiInfo.setExpectResult("Failed");
         apiInfo.setRemark("User08.2001用户签到-签到失败");
+        apiInfo.setPressFlag(false);
+        apiInfo.setGatlingTestName("changeEncryptLoginPassword");
         apiInfoService.insert(apiInfo);
         getPostResponse(apiInfo);
     }
@@ -279,7 +300,7 @@ public class AccountService {
         ApiTestResult apiTestResult;
         apiTestResult = tools.toApiTestResult(apiInfo);
         try {
-            response = template.postForEntity(apiInfo.getUrl(), setBody, String.class);
+            response = template.postForEntity((apiInfo.getBaseUrl() + apiInfo.getUri()), setBody, String.class);
         } catch (HttpClientErrorException e) {
             getExceptionResponse(apiInfo, apiTestResult, e);
             return;
@@ -295,7 +316,7 @@ public class AccountService {
         ApiTestResult apiTestResult;
         apiTestResult = tools.toApiTestResult(apiInfo);
         try {
-            response = template.getForEntity(apiInfo.getUrl(), String.class);
+            response = template.getForEntity((apiInfo.getBaseUrl() + apiInfo.getUri()), String.class);
         } catch (HttpClientErrorException e) {
             getExceptionResponse(apiInfo, apiTestResult, e);
             return;
@@ -325,10 +346,10 @@ public class AccountService {
         ApiTestResult apiTestResult;
         apiTestResult = tools.toApiTestResult(apiInfo);
         HttpEntity<String> requestEntity = new HttpEntity<>(setBody.toString(), requestHeaders);
-        log.info(apiInfo.getUrl());
+        log.info((apiInfo.getBaseUrl() + apiInfo.getUri()));
         ResponseEntity<String> response;
         try {
-            response = template.exchange(apiInfo.getUrl(), httpMethod, requestEntity, String.class);
+            response = template.exchange((apiInfo.getBaseUrl() + apiInfo.getUri()), httpMethod, requestEntity, String.class);
         } catch (HttpClientErrorException e) {
             getExceptionResponse(apiInfo, apiTestResult, e);
             return;
