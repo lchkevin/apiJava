@@ -14,7 +14,8 @@ public class ApiTestResult {
     private Long id;
     private String systemName;
     private String evm;
-    private String url;
+    private String baseUrl;
+    private String uri;
     private String remark;
     private String httpMethod;
     private String header;
