@@ -33,7 +33,7 @@ public class RestTem {
 
         ResponseEntity<String> response;
         try {
-            response = template.exchange(apiInfo.getUrl(), tools.toHttpMethod(apiInfo.getHttpMethod()), requestEntity, String.class);
+            response = template.exchange((apiInfo.getBaseUrl() + apiInfo.getUri()), tools.toHttpMethod(apiInfo.getHttpMethod()), requestEntity, String.class);
         } catch (HttpClientErrorException e) {
             getExceptionResponse(apiInfo, apiTestResult, e);
             return;
@@ -42,6 +42,7 @@ public class RestTem {
         apiTestResultService.insert(apiTestResult);
     }
 
+//与accountService中的getExceptionResponse()函数重复，accountService用于数据准别工作
     public void getExceptionResponse(ApiInfo apiInfo, ApiTestResult apiTestResult, HttpClientErrorException e) {
         String status = e.getMessage().trim().substring(0, 3);
         String body = e.getResponseBodyAsString();
