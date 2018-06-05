@@ -17,13 +17,13 @@ public class Tools {
 
     HttpMethod toHttpMethod(String httpMethodStr) {
         switch (httpMethodStr) {
-            case "GET":
+            case "get":
                 return HttpMethod.GET;
-            case "POST":
+            case "post":
                 return HttpMethod.POST;
-            case "PUT":
+            case "put":
                 return HttpMethod.PUT;
-            case "DELETE":
+            case "delete":
                 return HttpMethod.DELETE;
         }
         return null;
@@ -55,13 +55,14 @@ public class Tools {
 
     public ApiTestResult toApiTestResult(ApiInfo apiInfo) {
         ApiTestResult apiTestResult = new ApiTestResult();
+        apiTestResult.setBaseUrl(apiInfo.getBaseUrl());
+        apiTestResult.setUri(apiInfo.getUri());
+        apiTestResult.setRemark(apiInfo.getRemark());
         apiTestResult.setExpectResult(apiInfo.getExpectResult());
         apiTestResult.setHeader(apiInfo.getHeader());
         apiTestResult.setHttpMethod(apiInfo.getHttpMethod());
         apiTestResult.setSetBody(apiInfo.getSetBody());
         apiTestResult.setSystemName(apiInfo.getSystemName());
-        apiTestResult.setUrl(apiInfo.getUrl());
-        apiTestResult.setRemark(apiInfo.getRemark());
         return apiTestResult;
     }
 
