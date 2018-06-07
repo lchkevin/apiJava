@@ -71,9 +71,10 @@ public class AccountService {
         apiInfo.setSetBody(setBody.toString());
         apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("post");
-        apiInfo.setSystemName("account_user");
+        apiInfo.setSystemName("user_account");
         apiInfo.setExpectResult("Success");
         apiInfo.setRemark("User01.1001彩种收藏保存接口-正向用例");
+        apiInfo.setStatus_code(204);
         apiInfo.setPressFlag(true);
         apiInfo.setGatlingTestName("userAddBookmarks");
         apiInfoService.insert(apiInfo);
@@ -99,9 +100,10 @@ public class AccountService {
         apiInfo.setSetBody(setBody.toString());
         apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("delete");
-        apiInfo.setSystemName("account_user");
+        apiInfo.setSystemName("user_account");
         apiInfo.setExpectResult("Success");
         apiInfo.setRemark("User02.1001用户彩种收藏删除接口-正向用例");
+        apiInfo.setStatus_code(204);
         apiInfo.setPressFlag(true);
         apiInfo.setGatlingTestName("userDelBookmarks");
         apiInfoService.insert(apiInfo);
@@ -123,9 +125,10 @@ public class AccountService {
         apiInfo.setUri(uri);
         apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("get");
-        apiInfo.setSystemName("account_user");
+        apiInfo.setSystemName("user_account");
         apiInfo.setExpectResult("Success");
         apiInfo.setRemark("User03.1001用户彩种收藏获取接口-正向用例");
+        apiInfo.setStatus_code(200);
         apiInfo.setPressFlag(true);
         apiInfo.setGatlingTestName("userGetBookmarks");
         apiInfoService.insert(apiInfo);
@@ -158,9 +161,10 @@ public class AccountService {
         apiInfo.setSetBody(setBody.toString());
         apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("post");
-        apiInfo.setSystemName("account_user");
+        apiInfo.setSystemName("user_account");
         apiInfo.setExpectResult("Success");
         apiInfo.setRemark("User04.1001代理创建下层用户-正向用例");
+        apiInfo.setStatus_code(204);
         apiInfo.setPressFlag(true);
         apiInfo.setGatlingTestName("agentCreateLowUserAccount");
         apiInfoService.insert(apiInfo);
@@ -193,9 +197,10 @@ public class AccountService {
         apiInfo.setSetBody(setBody.toString());
         apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("put");
-        apiInfo.setSystemName("account_user");
+        apiInfo.setSystemName("user_account");
         apiInfo.setExpectResult("Success");
         apiInfo.setRemark("User05.1001用户更新基本信息-正向用例");
+        apiInfo.setStatus_code(204);
         apiInfo.setPressFlag(true);
         apiInfo.setGatlingTestName("agentCreateLowUserAccount");
         apiInfoService.insert(apiInfo);
@@ -225,9 +230,10 @@ public class AccountService {
         apiInfo.setSetBody(setBody.toString());
         apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("post");
-        apiInfo.setSystemName("account_user");
+        apiInfo.setSystemName("user_account");
         apiInfo.setExpectResult("Success");
         apiInfo.setRemark("User06.1001修改用户取款密码-正向用例");
+        apiInfo.setStatus_code(204);
         apiInfo.setPressFlag(true);
         apiInfo.setGatlingTestName("changeEncryptSecurityPassword");
         apiInfoService.insert(apiInfo);
@@ -257,9 +263,10 @@ public class AccountService {
         apiInfo.setSetBody(setBody.toString());
         apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("post");
-        apiInfo.setSystemName("account_user");
+        apiInfo.setSystemName("user_account");
         apiInfo.setExpectResult("Success");
         apiInfo.setRemark("User07.1001修改用户登录密码-正向用例");
+        apiInfo.setStatus_code(204);
         apiInfo.setPressFlag(true);
         apiInfo.setGatlingTestName("changeEncryptLoginPassword");
         apiInfoService.insert(apiInfo);
@@ -283,15 +290,160 @@ public class AccountService {
         apiInfo.setBaseUrl(baseUrl);
         apiInfo.setHeader(headerStr);
         apiInfo.setHttpMethod("post");
-        apiInfo.setSystemName("account_user");
+        apiInfo.setSystemName("user_account");
         apiInfo.setExpectResult("Failed");
         apiInfo.setRemark("User08.2001用户签到-签到失败");
+        apiInfo.setStatus_code(204);
         apiInfo.setPressFlag(false);
         apiInfo.setGatlingTestName("changeEncryptLoginPassword");
         apiInfoService.insert(apiInfo);
         getPostResponse(apiInfo);
     }
 
+
+    /**
+     * adminCMS.1.厅主或子账号发送消息
+     */
+    public void adminSendCMSMessage() {
+        ApiInfo apiInfo = new ApiInfo();
+        String baseUrl = evm.getProperty("admin_cms");
+        String uri = "/api/v1/cms/Message?access_token=XXXX";
+        requestHeaders.clear();
+        requestHeaders.add("Content-Type", "application/json");
+        requestHeaders.add("Accept", "*/*");
+        String headerStr = "Content-Type: application/json, Accept: */*";
+        setBody.clear();
+        setBody.put("content", "接口测试消息发送");
+        setBody.put("displayTime", 0);
+        setBody.put("groupType", "1");
+        setBody.put("title", "autoTest");
+        setBody.put("type", "NORMAL");
+        log.info(baseUrl + uri);
+        apiInfo.setBaseUrl(baseUrl);
+        apiInfo.setUri(uri);
+        apiInfo.setSetBody(setBody.toString());
+        apiInfo.setHeader(headerStr);
+        apiInfo.setHttpMethod("post");
+        apiInfo.setSystemName("admin_cms");
+        apiInfo.setExpectResult("Success");
+        apiInfo.setStatus_code(204);
+        apiInfo.setRemark("AdminCMS01.1001厅主或子账号发送消息-正向用例");
+        apiInfo.setPressFlag(true);
+        apiInfo.setGatlingTestName("adminSendMessage");
+        apiInfoService.insert(apiInfo);
+        getResponse(HttpMethod.PUT, apiInfo);
+    }
+
+    /**
+     * adminCMS.2.厅主或子账号查询消息
+     */
+    public void adminGetCMSMessage() {
+        ApiInfo apiInfo = new ApiInfo();
+        String baseUrl = evm.getProperty("admin_cms");
+        String uri = "/api/v1/cms/Message/?start=0&pageSize=20&access_token=XXXX";
+        requestHeaders.clear();
+        requestHeaders.add("Accept", "application/json");
+        String headerStr = "Accept: application/json";
+        log.info(baseUrl + uri);
+        apiInfo.setBaseUrl(baseUrl);
+        apiInfo.setUri(uri);
+        apiInfo.setSetBody(setBody.toString());
+        apiInfo.setHeader(headerStr);
+        apiInfo.setHttpMethod("get");
+        apiInfo.setSystemName("admin_cms");
+        apiInfo.setExpectResult("Success");
+        apiInfo.setRemark("AdminCMS02.1001厅主或子账号查询消息-正向用例");
+        apiInfo.setStatus_code(200);
+        apiInfo.setPressFlag(true);
+        apiInfo.setGatlingTestName("adminGetMessage");
+        apiInfoService.insert(apiInfo);
+        getResponse(HttpMethod.PUT, apiInfo);
+    }
+
+    /**
+     * adminCMS.3.厅主或子账号发送消息
+     */
+    public void adminUpdateCMSMessage() {
+        ApiInfo apiInfo = new ApiInfo();
+        String baseUrl = evm.getProperty("admin_cms");
+        String uri = "/api/v1/cms/Message/update?access_token=XXXX";
+        requestHeaders.clear();
+        requestHeaders.add("Content-Type", "application/json");
+        requestHeaders.add("Accept", "*/*");
+        String headerStr = "Content-Type: application/json, Accept: */*";
+        setBody.clear();
+        setBody.put("content", "接口测试消息发送");
+        setBody.put("displayTime", 0);
+        setBody.put("groupType", "1");
+        setBody.put("title", "autoTest");
+        setBody.put("type", "NORMAL");
+        log.info(baseUrl + uri);
+        apiInfo.setBaseUrl(baseUrl);
+        apiInfo.setUri(uri);
+        apiInfo.setSetBody(setBody.toString());
+        apiInfo.setHeader(headerStr);
+        apiInfo.setHttpMethod("post");
+        apiInfo.setSystemName("admin_cms");
+        apiInfo.setExpectResult("Success");
+        apiInfo.setStatus_code(204);
+        apiInfo.setRemark("AdminCMS03.1001厅主或子账号更新消息-正向用例");
+        apiInfo.setPressFlag(true);
+        apiInfo.setGatlingTestName("adminUpdateMessage");
+        apiInfoService.insert(apiInfo);
+        getResponse(HttpMethod.PUT, apiInfo);
+    }
+
+    /**
+     * userCMS.1.会员查询消息
+     */
+    public void userGetCMSMessage() {
+        ApiInfo apiInfo = new ApiInfo();
+        String baseUrl = evm.getProperty("admin_cms");
+        String uri = "/api/v1/cms/Message/playerMessages?start=0&pageSize=20&access_token=XXXX";
+        requestHeaders.clear();
+        requestHeaders.add("Accept", "application/json");
+        String headerStr = "Accept: application/json";
+        log.info(baseUrl + uri);
+        apiInfo.setBaseUrl(baseUrl);
+        apiInfo.setUri(uri);
+        apiInfo.setSetBody(setBody.toString());
+        apiInfo.setHeader(headerStr);
+        apiInfo.setHttpMethod("get");
+        apiInfo.setSystemName("user_cms");
+        apiInfo.setExpectResult("Success");
+        apiInfo.setRemark("UserCMS01.1001会员查询消息-正向用例");
+        apiInfo.setStatus_code(200);
+        apiInfo.setPressFlag(true);
+        apiInfo.setGatlingTestName("userGetMessage");
+        apiInfoService.insert(apiInfo);
+        getResponse(HttpMethod.PUT, apiInfo);
+    }
+
+    /**
+     * userCMS.2.会员是否有新消息
+     */
+    public void userGetNewCMSMessage() {
+        ApiInfo apiInfo = new ApiInfo();
+        String baseUrl = evm.getProperty("admin_cms");
+        String uri = "/api/v1/cms/Message/playerMessagesStatus?access_token=XXXX";
+        requestHeaders.clear();
+        requestHeaders.add("Accept", "application/json");
+        String headerStr = "Accept: application/json";
+        log.info(baseUrl + uri);
+        apiInfo.setBaseUrl(baseUrl);
+        apiInfo.setUri(uri);
+        apiInfo.setSetBody(setBody.toString());
+        apiInfo.setHeader(headerStr);
+        apiInfo.setHttpMethod("get");
+        apiInfo.setSystemName("user_cms");
+        apiInfo.setExpectResult("Success");
+        apiInfo.setRemark("UserCMS02.1001会员查询是否有新消息-正向用例");
+        apiInfo.setStatus_code(200);
+        apiInfo.setPressFlag(true);
+        apiInfo.setGatlingTestName("userGetIfHaveMessage");
+        apiInfoService.insert(apiInfo);
+        getResponse(HttpMethod.PUT, apiInfo);
+    }
 
     /**
      * http-Post请求结果处理
