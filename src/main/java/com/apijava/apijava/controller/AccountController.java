@@ -47,7 +47,6 @@ public class AccountController {
 
     @RequestMapping("sqlite")
     public ModelAndView modelAndView() {
-
         AtomicInteger success = new AtomicInteger();
         AtomicInteger failed = new AtomicInteger();
         AtomicInteger total = new AtomicInteger();
@@ -61,7 +60,7 @@ public class AccountController {
             restTem.excute(e);
         });
         //TODO 获取测试结果
-        apiTestResultService.getByCreateTimeAndSystemName(time, "account_user").forEach(e ->
+        apiTestResultService.getByCreateTimeAndSystemName(time, "user_account").forEach(e ->
                 resultList.add(Arrays.asList(e.getUri(), e.getRemark(), e.getResponseBody(), String.valueOf(e.getStatus_code()), e.getVerification())));
         List<APIResult> apiResults = new ArrayList<>();
         List<TestResultSummary> testResultSummaries = new ArrayList<>();
@@ -104,8 +103,13 @@ public class AccountController {
         accountService.encryptSecurityPassword();
         accountService.encryptLoginPassword();
         accountService.signIn();
+        accountService.adminGetCMSMessage();
+        accountService.adminSendCMSMessage();
+        accountService.adminUpdateCMSMessage();
+        accountService.userGetCMSMessage();
+        accountService.userGetNewCMSMessage();
         resultList.clear();
-        apiTestResultService.getByCreateTimeAndSystemName(time, "account_user").forEach(e ->
+        apiTestResultService.getByCreateTimeAndSystemName(time, "user_account").forEach(e ->
                 resultList.add(Arrays.asList(e.getUri(), e.getRemark(), e.getResponseBody(), String.valueOf(e.getStatus_code()), e.getVerification())));
         List<APIResult> apiResults = new ArrayList<>();
         List<TestResultSummary> testResultSummaries = new ArrayList<>();
@@ -126,7 +130,7 @@ public class AccountController {
 
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         String url = "http://192.168.1.93:8010/api/v1/account/webapi/operate/users/signIn?access_token=XXXX";
         String token = "MMMM";
         String body = "{\"qq\":\"258845215\",\"realName\":\"autotest\",\"password\":\"123456\",\"phoneNumber\":\"13996323363\",\"memberType\":\"AGENT\", \"username\":${username}, \"prizeGroup\":\"1950\",\"email\":\"258845215@qq.com\"}";
@@ -141,6 +145,6 @@ public class AccountController {
             body.replace("${*}", username);
         }
         log.info(body);
-    }
+    }*/
 
 }
