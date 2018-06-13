@@ -72,6 +72,15 @@
             </tr>
         </table>
     </div>
+    <div class="alert alert-warning text-center" role="alert" th:if="${#lists.isEmpty(apiResults)}">
+        <table class="text-center">
+            <tr>
+                <td th:text="没有找到系统名称"></td>
+                <td th:text="${systemName}"></td>
+                <td th:text="，对应的接口测试用例"></td>
+            </tr>
+        </table>
+    </div>
     <!--/ container -->
 </div>
 </body>
