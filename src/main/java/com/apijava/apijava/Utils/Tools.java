@@ -41,7 +41,7 @@ public class Tools {
         //TODO 添加输入字符串的格式校验
 //        if (!headerStr.contains(":")) return null;
         JSONObject jsonObject = new JSONObject();
-        Arrays.asList(headerStr.split(",")).forEach(e -> jsonObject.put(Arrays.asList(e.split(":")).get(0).trim(),Arrays.asList(e.split(":")).get(1).trim()));
+        Arrays.asList(headerStr.split(",")).forEach(e -> jsonObject.put(Arrays.asList(e.split(":")).get(0).trim(), Arrays.asList(e.split(":")).get(1).trim()));
         return jsonObject;
     }
 
@@ -112,6 +112,20 @@ public class Tools {
         gameIDList.add("HF_GXK3");
         Random index = new Random();
         return gameIDList.get(index.nextInt(2));
+    }
+
+    /**
+     * 获取随机创建的username
+     */
+    public static String getRandomString() {
+        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            int number = random.nextInt(62);
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
     }
 }
 
