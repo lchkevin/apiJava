@@ -1,10 +1,10 @@
 package com.apijava.apijava.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.apijava.apijava.Utils.RestTem;
 import com.apijava.apijava.Utils.Tools;
 import com.apijava.apijava.domain.APIResult;
 import com.apijava.apijava.domain.TestResultSummary;
-import com.apijava.apijava.service.AccountService;
 import com.apijava.apijava.service.ApiInfoService;
 import com.apijava.apijava.service.ApiTestResultService;
 import com.apijava.apijava.service.UserLogin;
@@ -23,14 +23,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class AccountController {
 
-    private AccountService accountService;
     private final ApiTestResultService apiTestResultService;
     private final ApiInfoService apiInfoService;
     private final RestTem restTem;
     private UserLogin userLogin;
 
-    public AccountController(AccountService accountService, ApiTestResultService apiTestResultService, ApiInfoService apiInfoService, RestTem restTem, UserLogin userLogin) {
-        this.accountService = accountService;
+    public AccountController( ApiTestResultService apiTestResultService, ApiInfoService apiInfoService, RestTem restTem, UserLogin userLogin) {
         this.apiTestResultService = apiTestResultService;
         this.apiInfoService = apiInfoService;
         this.restTem = restTem;
@@ -54,13 +52,15 @@ public class AccountController {
 
         resultList.clear();
         //TODO 从sqlite中获取account的接口进行测试
-        String time = (new Tools()).getTimeName();
-        apiInfoService.findAllBySystemName("account_user").forEach(e -> {
+        String testBatch = (new Tools()).getTimeName();
+        String systemName = "user_account";
+        apiInfoService.findAllBySystemName(systemName).forEach(e -> {
             e.setUri(changeUrlToken(e.getUri()));
-            restTem.excute(e);
+            e.setSetBody(changeParams(e.getSetBody()));
+            restTem.excute(e,testBatch);
         });
         //TODO 获取测试结果
-        apiTestResultService.getByCreateTimeAndSystemName(time, "user_account").forEach(e ->
+        apiTestResultService.getByTestBatch(testBatch).forEach(e ->
                 resultList.add(Arrays.asList(e.getUri(), e.getRemark(), e.getResponseBody(), String.valueOf(e.getStatus_code()), e.getVerification())));
         List<APIResult> apiResults = new ArrayList<>();
         List<TestResultSummary> testResultSummaries = new ArrayList<>();
@@ -72,6 +72,7 @@ public class AccountController {
         ModelAndView modelAndView = new ModelAndView("/template");
         modelAndView.addObject("apiResults", apiResults);
         modelAndView.addObject("testResultSummaries", testResultSummaries);
+        modelAndView.addObject("systemName", systemName);
         return modelAndView;
     }
 
@@ -95,19 +96,19 @@ public class AccountController {
         AtomicInteger failed = new AtomicInteger();
         AtomicInteger total = new AtomicInteger();
         List<List<String>> resultList = new ArrayList<>();
-        accountService.addBookmarks();
-        accountService.getBookmarks();
-        accountService.delBookmarks();
-        accountService.addAgentUser();
-        accountService.updateUserInfo();
-        accountService.encryptSecurityPassword();
-        accountService.encryptLoginPassword();
-        accountService.signIn();
-        accountService.adminGetCMSMessage();
-        accountService.adminSendCMSMessage();
-        accountService.adminUpdateCMSMessage();
-        accountService.userGetCMSMessage();
-        accountService.userGetNewCMSMessage();
+//        accountService.addBookmarks();
+//        accountService.getBookmarks();
+//        accountService.delBookmarks();
+//        accountService.addAgentUser();
+//        accountService.updateUserInfo();
+//        accountService.encryptSecurityPassword();
+//        accountService.encryptLoginPassword();
+//        accountService.signIn();
+//        accountService.adminGetCMSMessage();
+//        accountService.adminSendCMSMessage();
+//        accountService.adminUpdateCMSMessage();
+//        accountService.userGetCMSMessage();
+//        accountService.userGetNewCMSMessage();
         resultList.clear();
         apiTestResultService.getByCreateTimeAndSystemName(time, "user_account").forEach(e ->
                 resultList.add(Arrays.asList(e.getUri(), e.getRemark(), e.getResponseBody(), String.valueOf(e.getStatus_code()), e.getVerification())));
@@ -130,21 +131,28 @@ public class AccountController {
 
     }
 
+    private String changeParams(String bodyStr) {
+        if (null == bodyStr) return null;
+        JSONObject object = (JSONObject) JSONObject.parse(bodyStr);
+            object.keySet().forEach(e -> {
+                if (object.get(e).toString().contains("{")) {
+                    log.info(e);
+                    if (e.contains("username"))
+                        object.put(e, Tools.getRandomString());
+                }
+            });
+            return String.valueOf(object);
+    }
+
     /*public static void main(String[] args) {
         String url = "http://192.168.1.93:8010/api/v1/account/webapi/operate/users/signIn?access_token=XXXX";
         String token = "MMMM";
-        String body = "{\"qq\":\"258845215\",\"realName\":\"autotest\",\"password\":\"123456\",\"phoneNumber\":\"13996323363\",\"memberType\":\"AGENT\", \"username\":${username}, \"prizeGroup\":\"1950\",\"email\":\"258845215@qq.com\"}";
+        String body = "{\"qq\":\"258845215\",\"realName\":\"autotest\",\"password\":\"123456\",\"phoneNumber\":\"13996323363\",\"memberType\":\"AGENT\", \"username\":\"${username}\", \"prizeGroup\":\"1950\",\"email\":\"258845215@qq.com\"}";
         String username = "testName";
 
         if (url.contains("XXXX")) {
             url = url.replace("XXXX", token);
         }
         log.info(url);
-
-        if (body.contains("${")) {
-            body.replace("${*}", username);
-        }
-        log.info(body);
     }*/
-
 }

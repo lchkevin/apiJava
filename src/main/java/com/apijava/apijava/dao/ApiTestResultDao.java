@@ -9,4 +9,5 @@ import java.util.List;
 public interface ApiTestResultDao extends JpaRepository<ApiTestResult, Long>, JpaSpecificationExecutor<ApiTestResult> {
     List<ApiTestResult> findAllByCreateTime(String time);
     List<ApiTestResult> findAllByCreateTimeAfterAndSystemNameEquals(String time, String systemName);
+    List<ApiTestResult> findAllByTestBatch(String testBanch);
 }

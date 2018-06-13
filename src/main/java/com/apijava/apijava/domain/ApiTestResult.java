@@ -25,4 +25,5 @@ public class ApiTestResult {
     private int status_code;
     private String responseBody;
     private String createTime;
+    private String testBatch;
 }
