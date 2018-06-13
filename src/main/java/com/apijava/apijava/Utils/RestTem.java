@@ -24,9 +24,10 @@ public class RestTem {
         this.apiTestResultService = apiTestResultService;
     }
 
-    public void excute(ApiInfo apiInfo) {
+    public void excute(ApiInfo apiInfo, String testBatch) {
         ApiTestResult apiTestResult;
         apiTestResult = tools.toApiTestResult(apiInfo);
+        apiTestResult.setTestBatch(testBatch);
         requestHeaders.clear();
         requestHeaders = tools.toHttpHeaders(tools.toJSONObject(apiInfo.getHeader()));
         HttpEntity<String> requestEntity = new HttpEntity<>(apiInfo.getSetBody(), requestHeaders);
@@ -43,7 +44,7 @@ public class RestTem {
     }
 
 //与accountService中的getExceptionResponse()函数重复，accountService用于数据准别工作
-    public void getExceptionResponse(ApiInfo apiInfo, ApiTestResult apiTestResult, HttpClientErrorException e) {
+private void getExceptionResponse(ApiInfo apiInfo, ApiTestResult apiTestResult, HttpClientErrorException e) {
         String status = e.getMessage().trim().substring(0, 3);
         String body = e.getResponseBodyAsString();
         apiTestResult.setStatus_code(Integer.parseInt(status));
@@ -53,5 +54,4 @@ public class RestTem {
         } else apiTestResult.setVerification("Failed");
         apiTestResultService.insert(apiTestResult);
     }
-
 }

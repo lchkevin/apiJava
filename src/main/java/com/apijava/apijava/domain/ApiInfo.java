@@ -6,8 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "apiinfo",
-uniqueConstraints = {@UniqueConstraint(columnNames = "gatlingTestName")})
+@Table(name = "apiinfo")
 public class ApiInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,6 +24,5 @@ public class ApiInfo {
     private Boolean pressFlag;
     @Column(unique = true,length = 100)
     private String gatlingTestName;
-    @Column()
     private int status_code;
 }

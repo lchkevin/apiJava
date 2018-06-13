@@ -21,7 +21,6 @@ public class ApiInfoServiceImpl implements ApiInfoService {
 
     @Override
     public void insert(ApiInfo apiInfo) {
-        apiInfo.setEvm("SIT");
         apiInfo.setCreatTime((new Tools()).getTimeName());
         apiInfoDao.save(apiInfo);
     }

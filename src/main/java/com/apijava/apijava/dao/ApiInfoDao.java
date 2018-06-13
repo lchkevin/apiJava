@@ -9,4 +9,8 @@ import java.util.List;
 public interface ApiInfoDao extends JpaRepository<ApiInfo, Long>, JpaSpecificationExecutor<ApiInfo> {
     List<ApiInfo> findAllBySystemName(String systemName);
     List<ApiInfo> findAllByPressFlagAndSystemName(boolean flag, String systemName);
+
+//    @Modifying
+//    @Query("update apiinfo set apiinfo.pressFlage = true where id = id")
+//    public boolean updateSQL(int id);
 }
