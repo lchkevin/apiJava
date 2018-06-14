@@ -1,13 +1,11 @@
 package com.apijava.apijava.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.apijava.apijava.domain.ApiInfo;
 import com.apijava.apijava.service.ApiInfoService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "addapi",method = RequestMethod.POST)
@@ -21,21 +19,19 @@ public class InsertDataController {
     }
 
     @RequestMapping(value = "/apiInfo", method = RequestMethod.POST)
-    public JSONObject add(@RequestBody()ApiInfo apiInfo) {
+    @ResponseStatus
+    public ResponseEntity<ApiInfo> add(@RequestBody()ApiInfo apiInfo) {
         addPressFlag(apiInfo);
-        JSONObject response = new JSONObject();
-        String errorStr = null;
-        if (!checkValidity(apiInfo, errorStr)) {
-            response.put("success", "false");
-            response.put("msg", errorStr);
-            return response;
+        HttpStatus status;
+        if (!checkValidity(apiInfo)) {
+            status = HttpStatus.METHOD_NOT_ALLOWED;
+            return new ResponseEntity<>(apiInfo, status);
         }
 
         if (apiInfo.getSetBody().equals("")) apiInfo.setSetBody(null);
         apiInfoService.insert(apiInfo);
-        response.put("success", "true");
-
-        return response;
+        status = HttpStatus.NOT_ACCEPTABLE;
+        return new ResponseEntity<>(apiInfo, status);
     }
     private void addPressFlag(ApiInfo apiInfo) {
         if (apiInfo.getGatlingTestName() == null) {
@@ -46,21 +42,22 @@ public class InsertDataController {
 
     }
 
-    private boolean checkValidity(ApiInfo apiInfo, String errorStr) {
-        boolean baseUrl_flag = !(null == apiInfo.getBaseUrl());
+    private boolean checkValidity(ApiInfo apiInfo) {
+        String errorStr = null;
+        boolean baseUrl_flag = !apiInfo.getBaseUrl().equals("");
         if (!baseUrl_flag) {
             errorStr += "BaseUrl 为空\n";
         }
-        boolean evm_flag = !(null == apiInfo.getEvm());
+        boolean evm_flag = !apiInfo.getEvm().equals("");
         if (!evm_flag) {
             errorStr += "测试环境不能为空\n";
         }
-        boolean expect_result_flag = !(null == apiInfo.getExpectResult());
-        boolean gatlingName_flag = !(null == apiInfo.getGatlingTestName());
-        boolean header_flag = !(null == apiInfo.getHeader());
-        boolean httpMethod_flag = !(null == apiInfo.getHttpMethod());
-        boolean systemName_flag = !(null == apiInfo.getSystemName());
-        boolean uri_flag = !(null == apiInfo.getUri());
+        boolean expect_result_flag = !apiInfo.getExpectResult().equals("");
+        boolean gatlingName_flag = !apiInfo.getGatlingTestName().equals("");
+        boolean header_flag = !apiInfo.getHeader().equals("");
+        boolean httpMethod_flag = !apiInfo.getHttpMethod().equals("");
+        boolean systemName_flag = !apiInfo.getSystemName().equals("");
+        boolean uri_flag = !apiInfo.getUri().equals("");
 
         return baseUrl_flag & evm_flag & expect_result_flag & gatlingName_flag & header_flag & httpMethod_flag & systemName_flag & uri_flag;
     }
